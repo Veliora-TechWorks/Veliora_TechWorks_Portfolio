@@ -3,6 +3,8 @@ export interface Project {
   title: string
   description: string
   image: string
+  images?: string[]
+  coverImage?: string
   category: string
   technologies: string[]
   liveUrl?: string

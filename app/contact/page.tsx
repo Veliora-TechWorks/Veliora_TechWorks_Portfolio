@@ -19,7 +19,7 @@ export default function Contact() {
     setIsSubmitting(true)
     
     try {
-      const response = await fetch('/api/contact', {
+      const response = await fetch('/api/contacts', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -58,10 +58,10 @@ export default function Contact() {
             transition={{ duration: 0.8 }}
             className="text-center mb-16"
           >
-            <h1 className="text-5xl md:text-6xl font-bold mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
               <span className="metallic-text">Get</span> In Touch
             </h1>
-            <p className="text-xl text-accent max-w-3xl mx-auto">
+            <p className="text-base sm:text-lg md:text-xl text-accent max-w-3xl mx-auto px-4">
               Ready to start your next project? Let's discuss how we can help bring your vision to life
             </p>
           </motion.div>
@@ -71,7 +71,184 @@ export default function Contact() {
       {/* Contact Section */}
       <section className="py-20 bg-primary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-12">
+          {/* Mobile/Tablet: Reconstructed Layout */}
+          <div className="block lg:hidden">
+            {/* Contact Form First */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6 }}
+              viewport={{ once: true }}
+              className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-gray-200/10 mb-8"
+            >
+              <h2 className="text-2xl font-bold mb-6 text-white text-center">Send us a Message</h2>
+              
+              <form onSubmit={handleSubmit} className="space-y-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label htmlFor="name" className="block text-sm font-medium text-white mb-2">
+                      Name *
+                    </label>
+                    <input
+                      type="text"
+                      id="name"
+                      name="name"
+                      value={formData.name}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/30 rounded-lg focus:border-blue-400 focus:outline-none text-white"
+                      placeholder="Your name"
+                    />
+                  </div>
+                  
+                  <div>
+                    <label htmlFor="email" className="block text-sm font-medium text-white mb-2">
+                      Email *
+                    </label>
+                    <input
+                      type="email"
+                      id="email"
+                      name="email"
+                      value={formData.email}
+                      onChange={handleChange}
+                      required
+                      className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/30 rounded-lg focus:border-blue-400 focus:outline-none text-white"
+                      placeholder="your@email.com"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label htmlFor="subject" className="block text-sm font-medium text-white mb-2">
+                    Subject *
+                  </label>
+                  <input
+                    type="text"
+                    id="subject"
+                    name="subject"
+                    value={formData.subject}
+                    onChange={handleChange}
+                    required
+                    className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/30 rounded-lg focus:border-blue-400 focus:outline-none text-white"
+                    placeholder="Project inquiry"
+                  />
+                </div>
+
+                <div>
+                  <label htmlFor="message" className="block text-sm font-medium text-white mb-2">
+                    Message *
+                  </label>
+                  <textarea
+                    id="message"
+                    name="message"
+                    value={formData.message}
+                    onChange={handleChange}
+                    required
+                    rows={4}
+                    className="w-full px-4 py-3 bg-gray-800/50 border border-gray-600/30 rounded-lg focus:border-blue-400 focus:outline-none text-white resize-none"
+                    placeholder="Tell us about your project..."
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  variant="neon"
+                  size="lg"
+                  disabled={isSubmitting}
+                  className="w-full"
+                >
+                  {isSubmitting ? (
+                    'Sending...'
+                  ) : (
+                    <>
+                      Send Message
+                      <Send className="ml-2 h-4 w-4" />
+                    </>
+                  )}
+                </Button>
+              </form>
+            </motion.div>
+
+            {/* Contact Info Grid */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.2 }}
+              viewport={{ once: true }}
+              className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-gray-200/10 mb-8"
+            >
+              <h3 className="text-lg font-semibold mb-4 text-white text-center">Get in Touch</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <Mail className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white text-sm">Email</h4>
+                    <p className="text-gray-400 text-xs">velioratechworks@gmail.com</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <Phone className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white text-sm">Phone</h4>
+                    <p className="text-gray-400 text-xs">+91 86238 96542</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <MapPin className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white text-sm">Location</h4>
+                    <p className="text-gray-400 text-xs">Pune, Maharashtra</p>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-gradient-to-br from-blue-500 to-purple-600 rounded-lg flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-white" />
+                  </div>
+                  <div>
+                    <h4 className="font-medium text-white text-sm">Hours</h4>
+                    <p className="text-gray-400 text-xs">Mon - Fri : 10AM - 6PM</p>
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+
+            {/* Quick Contact Actions */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="grid grid-cols-2 gap-4"
+            >
+              <a
+                href="mailto:velioratechworks@gmail.com"
+                className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-gray-200/10 text-center hover:border-blue-400/50 transition-colors"
+              >
+                <Mail className="h-6 w-6 text-blue-400 mx-auto mb-2" />
+                <span className="text-white text-sm font-medium">Email Us</span>
+              </a>
+              
+              <a
+                href="tel:+918623896542"
+                className="bg-white/5 backdrop-blur-sm rounded-xl p-4 border border-gray-200/10 text-center hover:border-blue-400/50 transition-colors"
+              >
+                <Phone className="h-6 w-6 text-blue-400 mx-auto mb-2" />
+                <span className="text-white text-sm font-medium">Call Us</span>
+              </a>
+            </motion.div>
+          </div>
+
+          {/* Desktop: Two Column Layout */}
+          <div className="hidden lg:grid grid-cols-2 gap-12">
             {/* Contact Info */}
             <motion.div
               initial={{ opacity: 0, x: -50 }}
@@ -79,63 +256,63 @@ export default function Contact() {
               transition={{ duration: 0.8 }}
               viewport={{ once: true }}
             >
-              <h2 className="text-3xl font-bold mb-8 metallic-text">Let's Connect</h2>
+              <h2 className="text-2xl font-bold mb-8 metallic-text">Let's Connect</h2>
               
-              <div className="space-y-6">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-metallic-gradient rounded-lg flex items-center justify-center">
-                    <Mail className="h-6 w-6 text-primary" />
+              <div className="space-y-4">
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-metallic-gradient rounded-lg flex items-center justify-center">
+                    <Mail className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-secondary">Email</h3>
-                    <p className="text-accent">hello@veliora.tech</p>
+                    <h3 className="font-semibold text-secondary text-sm">Email</h3>
+                    <p className="text-accent text-sm">velioratechworks@gmail.com</p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-metallic-gradient rounded-lg flex items-center justify-center">
-                    <Phone className="h-6 w-6 text-primary" />
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-metallic-gradient rounded-lg flex items-center justify-center">
+                    <Phone className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-secondary">Phone</h3>
-                    <p className="text-accent">+1 (555) 123-4567</p>
+                    <h3 className="font-semibold text-secondary text-sm">Phone</h3>
+                    <p className="text-accent text-sm">+91 86238 96542</p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-metallic-gradient rounded-lg flex items-center justify-center">
-                    <MapPin className="h-6 w-6 text-primary" />
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-metallic-gradient rounded-lg flex items-center justify-center">
+                    <MapPin className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-secondary">Location</h3>
-                    <p className="text-accent">San Francisco, CA</p>
+                    <h3 className="font-semibold text-secondary text-sm">Location</h3>
+                    <p className="text-accent text-sm">Pune, Maharashtra</p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-metallic-gradient rounded-lg flex items-center justify-center">
-                    <Clock className="h-6 w-6 text-primary" />
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-metallic-gradient rounded-lg flex items-center justify-center">
+                    <Clock className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-secondary">Business Hours</h3>
-                    <p className="text-accent">Mon - Fri: 9AM - 6PM PST</p>
+                    <h3 className="font-semibold text-secondary text-sm">Business Hours</h3>
+                    <p className="text-accent text-sm">Mon - Fri : 10AM - 6PM</p>
                   </div>
                 </div>
 
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-metallic-gradient rounded-lg flex items-center justify-center">
-                    <Globe className="h-6 w-6 text-primary" />
+                <div className="flex items-center space-x-3">
+                  <div className="w-10 h-10 bg-metallic-gradient rounded-lg flex items-center justify-center">
+                    <Globe className="h-5 w-5 text-primary" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-secondary">Global Reach</h3>
-                    <p className="text-accent">Serving clients worldwide</p>
+                    <h3 className="font-semibold text-secondary text-sm">Global Reach</h3>
+                    <p className="text-accent text-sm">Serving clients worldwide</p>
                   </div>
                 </div>
               </div>
 
               {/* Map Placeholder */}
-              <div className="mt-8 h-64 glass rounded-xl flex items-center justify-center">
-                <p className="text-accent">Interactive Map Coming Soon</p>
+              <div className="mt-6 h-48 glass rounded-xl flex items-center justify-center">
+                <p className="text-accent text-sm">Interactive Map Coming Soon</p>
               </div>
             </motion.div>
 
@@ -147,7 +324,7 @@ export default function Contact() {
               viewport={{ once: true }}
               className="glass rounded-xl p-8"
             >
-              <h2 className="text-3xl font-bold mb-8 metallic-text">Send Message</h2>
+              <h2 className="text-2xl lg:text-3xl font-bold mb-8 metallic-text">Send Message</h2>
               
               <form onSubmit={handleSubmit} className="space-y-6">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -248,7 +425,7 @@ export default function Contact() {
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-4xl md:text-5xl font-bold mb-6">
+            <h2 className="text-2xl sm:text-3xl md:text-4xl lg:text-5xl font-bold mb-6">
               <span className="metallic-text">Frequently</span> Asked Questions
             </h2>
           </motion.div>
@@ -280,8 +457,8 @@ export default function Contact() {
                 viewport={{ once: true }}
                 className="glass rounded-xl p-6"
               >
-                <h3 className="text-lg font-semibold text-secondary mb-3">{faq.question}</h3>
-                <p className="text-accent">{faq.answer}</p>
+                <h3 className="text-base lg:text-lg font-semibold text-secondary mb-3">{faq.question}</h3>
+                <p className="text-accent text-sm lg:text-base">{faq.answer}</p>
               </motion.div>
             ))}
           </div>

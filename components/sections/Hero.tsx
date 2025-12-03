@@ -29,39 +29,30 @@ export function Hero() {
       {/* Animated Background */}
       <div className="absolute inset-0 bg-dark-gradient">
         <div className="absolute inset-0">
-          {/* Floating particles */}
-          {[...Array(20)].map((_, i) => (
-            <motion.div
-              key={i}
-              className="absolute w-1 h-1 bg-neon rounded-full"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-              }}
-              animate={{
-                y: [0, -30, 0],
-                opacity: [0.3, 1, 0.3],
-              }}
-              transition={{
-                duration: 3 + Math.random() * 2,
-                repeat: Infinity,
-                delay: Math.random() * 2,
-              }}
-            />
-          ))}
+          <motion.div
+            className="absolute inset-0 bg-gradient-to-br from-accent/5 via-transparent to-neon/5"
+            animate={{
+              opacity: [0.3, 0.6, 0.3],
+            }}
+            transition={{
+              duration: 8,
+              repeat: Infinity,
+              ease: "easeInOut"
+            }}
+          />
         </div>
       </div>
 
-      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <div className="relative z-10 max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 text-center">
         {/* Advanced Logo Animation */}
         <motion.div
           initial={{ scale: 0, rotate: -180 }}
           animate={{ scale: 1, rotate: 0 }}
           transition={{ duration: 0.6, ease: "easeOut" }}
-          className="mb-8"
+          className="mb-8 md:mb-12"
         >
           <motion.div 
-            className="w-48 h-48 mx-auto rounded-lg flex items-center justify-center"
+            className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48 mx-auto rounded-lg flex items-center justify-center"
             whileHover={{ 
               scale: 1.1,
               rotate: [0, 5, -5, 0],
@@ -69,12 +60,25 @@ export function Hero() {
             }}
             whileTap={{ scale: 0.95 }}
           >
-            <Image src="/Logo.png" alt="Veliora TechWorks" width={192} height={192} className="w-48 h-48" />
+            <Image src="/Logo.png" alt="Veliora TechWorks" width={192} height={192} className="w-32 h-32 sm:w-40 sm:h-40 md:w-48 md:h-48" />
           </motion.div>
         </motion.div>
 
-        {/* Staggered Text Animation */}
-        <div className="text-5xl md:text-7xl font-bold mb-6">
+        {/* Mobile/Tablet Enhanced Text */}
+        <div className="block md:hidden">
+          <motion.div
+            initial={{ opacity: 0, scale: 0.8 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.8, ease: "easeOut" }}
+            className="text-4xl sm:text-5xl font-bold mb-6 leading-tight"
+          >
+            <div className="metallic-text mb-2">Veliora</div>
+            <div className="text-secondary">TechWorks</div>
+          </motion.div>
+        </div>
+
+        {/* Desktop Text Animation */}
+        <div className="hidden md:block text-5xl lg:text-7xl font-bold mb-8">
           {'Veliora'.split('').map((char, i) => (
             <motion.span
               key={i}
@@ -83,7 +87,7 @@ export function Hero() {
               transition={{ duration: 0.3, delay: 0.1 + i * 0.05 }}
               className="inline-block metallic-text"
               whileHover={{ 
-                scale: 1.2,
+                scale: 1.1,
                 transition: { duration: 0.2 }
               }}
             >
@@ -99,7 +103,7 @@ export function Hero() {
               transition={{ duration: 0.3, delay: 0.4 + i * 0.05 }}
               className="inline-block text-secondary"
               whileHover={{ 
-                scale: 1.2,
+                scale: 1.1,
                 transition: { duration: 0.2 }
               }}
             >
@@ -113,9 +117,9 @@ export function Hero() {
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 0.8 }}
-          className="mb-12"
+          className="mb-10 md:mb-12"
         >
-          <div className="text-xl md:text-2xl text-accent mb-6 max-w-3xl mx-auto h-8">
+          <div className="text-lg sm:text-xl md:text-2xl text-accent mb-4 md:mb-6 max-w-3xl mx-auto h-6 sm:h-7 md:h-8">
             {displayText}
             <motion.span
               animate={{ opacity: [1, 0] }}
@@ -130,18 +134,51 @@ export function Hero() {
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.5, delay: 1.2 }}
-            className="text-lg text-accent/80 max-w-2xl mx-auto leading-relaxed"
+            className="text-base sm:text-lg text-accent/80 max-w-2xl mx-auto leading-relaxed px-4"
           >
             Premium technology solutions crafted with precision, innovation, and futuristic design
           </motion.p>
         </motion.div>
 
-        {/* Advanced Interactive Buttons */}
+        {/* Mobile/Tablet Button Layout */}
+        <div className="block md:hidden">
+          <motion.div
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6, delay: 1.2 }}
+            className="space-y-4 px-4"
+          >
+            <Link href="/projects" className="block">
+              <motion.div
+                whileTap={{ scale: 0.98 }}
+                className="w-full"
+              >
+                <Button variant="neon" size="lg" className="w-full h-14 text-lg font-semibold">
+                  <span>View Our Work</span>
+                  <ArrowRight className="ml-2 h-5 w-5" />
+                </Button>
+              </motion.div>
+            </Link>
+            <Link href="/contact" className="block">
+              <motion.div
+                whileTap={{ scale: 0.98 }}
+                className="w-full"
+              >
+                <Button variant="outline" size="lg" className="w-full h-14 text-lg font-semibold border-2">
+                  <Sparkles className="mr-2 h-5 w-5" />
+                  <span>Start Project</span>
+                </Button>
+              </motion.div>
+            </Link>
+          </motion.div>
+        </div>
+
+        {/* Desktop Button Layout */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: 1.5 }}
-          className="flex flex-col sm:flex-row gap-6 justify-center items-center"
+          className="hidden md:flex gap-6 justify-center items-center"
         >
           <Link href="/projects">
             <motion.div

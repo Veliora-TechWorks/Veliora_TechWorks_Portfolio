@@ -1,0 +1,58 @@
+[
+  {
+    "title": "Web Development",
+    "description": "Modern, responsive websites built with cutting-edge technologies like Next.js, React, and TypeScript.",
+    "features": [
+      "Responsive Design",
+      "SEO Optimized",
+      "Performance Focused",
+      "Modern Frameworks"
+    ],
+    "icon": "Code",
+    "price": "$999",
+    "status": "active",
+    "id": "service-1764740367421-0"
+  },
+  {
+    "title": "UI/UX Design",
+    "description": "Beautiful, user-centered designs that enhance user experience and drive engagement.",
+    "features": [
+      "User Research",
+      "Wireframing",
+      "Prototyping",
+      "Visual Design"
+    ],
+    "icon": "Design",
+    "price": "$799",
+    "status": "active",
+    "id": "service-1764740367421-1"
+  },
+  {
+    "title": "Mobile App Development",
+    "description": "Native and cross-platform mobile applications for iOS and Android.",
+    "features": [
+      "React Native",
+      "iOS Development",
+      "Android Development",
+      "App Store Deployment"
+    ],
+    "icon": "Smartphone",
+    "price": "Coming Soon",
+    "status": "coming-soon",
+    "id": "service-1764740367421-2"
+  },
+  {
+    "title": "Digital Marketing",
+    "description": "Comprehensive digital marketing strategies to grow your online presence.",
+    "features": [
+      "SEO Strategy",
+      "Social Media Marketing",
+      "Content Marketing",
+      "Analytics"
+    ],
+    "icon": "TrendingUp",
+    "price": "Coming Soon",
+    "status": "active",
+    "id": "service-1764740367421-3"
+  }
+]

@@ -46,64 +46,62 @@ export function FloatingCards() {
           </h2>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        {/* Mobile: Enhanced Card View */}
+        <div className="block md:hidden space-y-6">
           {cards.map((card, index) => (
             <motion.div
               key={card.title}
-              initial={{ opacity: 0, y: 100, rotateX: -90 }}
-              whileInView={{ opacity: 1, y: 0, rotateX: 0 }}
-              transition={{ 
-                duration: 0.8, 
-                delay: card.delay,
-                type: "spring",
-                stiffness: 100
-              }}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="glass p-6 rounded-xl border border-accent/10 hover:border-neon/30 shadow-lg hover:shadow-xl transition-all duration-300"
+            >
+              <div className="flex items-start space-x-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-neon/20 to-purple/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-inner">
+                  <card.icon className="w-7 h-7 text-neon" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-secondary mb-2">
+                    {card.title}
+                  </h3>
+                  <p className="text-accent/90 leading-relaxed">
+                    {card.description}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Tablet/Desktop: Grid View */}
+        <div className="hidden md:grid grid-cols-2 lg:grid-cols-4 gap-6">
+          {cards.map((card, index) => (
+            <motion.div
+              key={card.title}
+              initial={{ opacity: 0, y: 50 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: card.delay }}
               viewport={{ once: true }}
               whileHover={{ 
-                y: -20,
-                rotateY: 10,
+                y: -10,
                 scale: 1.05,
                 transition: { duration: 0.3 }
               }}
               className="relative group"
             >
-              <div className="glass p-8 rounded-2xl border border-accent/20 h-full relative overflow-hidden">
-                {/* Floating background effect */}
-                <motion.div
-                  animate={{ 
-                    rotate: [0, 360],
-                    scale: [1, 1.2, 1]
-                  }}
-                  transition={{ 
-                    duration: 20,
-                    repeat: Infinity,
-                    ease: "linear"
-                  }}
-                  className="absolute -top-10 -right-10 w-20 h-20 bg-gradient-to-r from-neon/10 to-accent/10 rounded-full blur-xl"
-                />
+              <div className="glass p-6 rounded-lg border border-accent/20 relative overflow-hidden">
+                <div className="w-12 h-12 bg-metallic-gradient rounded-lg flex items-center justify-center mb-4 group-hover:shadow-lg">
+                  <card.icon className="w-6 h-6 text-primary" />
+                </div>
                 
-                <motion.div
-                  whileHover={{ scale: 1.2, rotate: 360 }}
-                  transition={{ duration: 0.6 }}
-                  className="w-16 h-16 bg-metallic-gradient rounded-2xl flex items-center justify-center mb-6 group-hover:shadow-2xl"
-                >
-                  <card.icon className="w-8 h-8 text-primary" />
-                </motion.div>
-                
-                <h3 className="text-xl font-bold text-secondary mb-4 group-hover:text-neon transition-colors">
+                <h3 className="text-xl font-bold text-secondary mb-3 group-hover:text-neon transition-colors">
                   {card.title}
                 </h3>
                 
                 <p className="text-accent group-hover:text-secondary transition-colors">
                   {card.description}
                 </p>
-
-                {/* Hover glow effect */}
-                <motion.div
-                  initial={{ opacity: 0 }}
-                  whileHover={{ opacity: 1 }}
-                  className="absolute inset-0 bg-gradient-to-r from-neon/5 to-accent/5 rounded-2xl"
-                />
               </div>
             </motion.div>
           ))}

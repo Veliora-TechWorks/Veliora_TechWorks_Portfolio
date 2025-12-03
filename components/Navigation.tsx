@@ -53,8 +53,8 @@ export function Navigation() {
         scrolled ? 'glass backdrop-blur-md' : 'bg-transparent'
       }`}
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex items-center justify-between h-16">
+      <div className="max-w-7xl mx-auto px-6 sm:px-8 lg:px-10 pt-3">
+        <div className="flex items-center justify-between h-18 md:h-16">
           {/* Logo */}
           <Link href="/" className="flex items-center space-x-2">
             <Image src="/Logo.png" alt="Veliora TechWorks" width={32} height={32} className="w-8 h-8" />
@@ -89,8 +89,9 @@ export function Navigation() {
               variant="ghost"
               size="icon"
               onClick={() => setIsOpen(!isOpen)}
+              className="hover:bg-accent/10 transition-colors"
             >
-              {isOpen ? <X size={24} /> : <Menu size={24} />}
+              {isOpen ? <X size={22} /> : <Menu size={22} />}
             </Button>
           </div>
         </div>
@@ -101,28 +102,30 @@ export function Navigation() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="md:hidden glass rounded-lg mt-2 p-4"
+            className="md:hidden glass rounded-lg mt-2 p-6 border border-accent/10 shadow-xl"
           >
-            {navItems.map((item) => (
-              <Link
-                key={item.href}
-                href={item.href}
-                className="block py-2 text-secondary hover:text-accent transition-colors duration-300"
-                onClick={() => setIsOpen(false)}
-              >
-                {item.label}
-              </Link>
-            ))}
-            {isAdmin && (
-              <Link
-                href="/admin"
-                className="flex items-center space-x-1 py-2 text-neon hover:text-accent transition-colors duration-300"
-                onClick={() => setIsOpen(false)}
-              >
-                <Settings size={16} />
-                <span>Dashboard</span>
-              </Link>
-            )}
+            <div className="space-y-1">
+              {navItems.map((item) => (
+                <Link
+                  key={item.href}
+                  href={item.href}
+                  className="block py-3 px-4 text-secondary hover:text-neon hover:bg-accent/5 rounded-lg transition-all duration-300 font-medium"
+                  onClick={() => setIsOpen(false)}
+                >
+                  {item.label}
+                </Link>
+              ))}
+              {isAdmin && (
+                <Link
+                  href="/admin"
+                  className="flex items-center space-x-2 py-3 px-4 text-neon hover:text-accent hover:bg-neon/5 rounded-lg transition-all duration-300 font-medium border-t border-accent/10 mt-2 pt-4"
+                  onClick={() => setIsOpen(false)}
+                >
+                  <Settings size={18} />
+                  <span>Dashboard</span>
+                </Link>
+              )}
+            </div>
           </motion.div>
         )}
       </div>

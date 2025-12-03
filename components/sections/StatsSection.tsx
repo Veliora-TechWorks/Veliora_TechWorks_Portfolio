@@ -46,7 +46,7 @@ export function StatsSection() {
           viewport={{ once: true }}
           className="text-center mb-16"
         >
-          <h2 className="text-4xl md:text-5xl font-bold mb-6">
+          <h2 className="text-3xl md:text-4xl font-bold mb-6">
             <span className="metallic-text">Proven</span> Excellence
           </h2>
         </motion.div>
@@ -61,11 +61,11 @@ export function StatsSection() {
               viewport={{ once: true }}
               className="text-center"
             >
-              <div className="text-4xl md:text-6xl font-bold mb-2 metallic-text">
+              <div className="text-3xl md:text-5xl font-bold mb-2 metallic-text">
                 <Counter end={stat.number} />
                 {stat.suffix}
               </div>
-              <p className="text-accent text-sm md:text-base">
+              <p className="text-accent text-xs md:text-sm">
                 {stat.label}
               </p>
             </motion.div>

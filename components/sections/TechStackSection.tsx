@@ -31,7 +31,51 @@ export function TechStackSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Mobile: Enhanced Card View */}
+        <div className="block md:hidden space-y-6">
+          {techStack.map((category, index) => (
+            <motion.div
+              key={category.name}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className={`glass p-6 rounded-xl border shadow-lg hover:shadow-xl transition-all duration-300 ${
+                category.comingSoon ? 'border-accent/10 opacity-70' : 'border-accent/10 hover:border-neon/30'
+              }`}
+            >
+              <div className="flex items-start space-x-4">
+                <div className={`w-14 h-14 rounded-xl flex items-center justify-center flex-shrink-0 shadow-inner ${
+                  category.comingSoon ? 'bg-accent/10' : 'bg-gradient-to-br from-neon/20 to-accent/20'
+                }`}>
+                  <category.icon className={`w-7 h-7 ${
+                    category.comingSoon ? 'text-accent/60' : 'text-neon'
+                  }`} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-secondary mb-3">{category.name}</h3>
+                  <div className="flex flex-wrap gap-2">
+                    {category.techs.map((tech) => (
+                      <span
+                        key={tech}
+                        className={`px-3 py-1 text-sm rounded-full border ${
+                          category.comingSoon 
+                            ? 'bg-accent/5 text-accent/60 border-accent/10' 
+                            : 'bg-neon/10 text-neon border-neon/20'
+                        }`}
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Tablet/Desktop: Grid View */}
+        <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6">
           {techStack.map((category, index) => (
             <motion.div
               key={category.name}
@@ -40,7 +84,7 @@ export function TechStackSection() {
               transition={{ duration: 0.5, delay: index * 0.1 }}
               viewport={{ once: true }}
               whileHover={{ scale: 1.05, y: -10 }}
-              className={`glass p-6 rounded-xl border group cursor-pointer ${
+              className={`glass p-6 rounded-lg border group cursor-pointer ${
                 category.comingSoon ? 'border-accent/10 opacity-60' : 'border-accent/20'
               }`}
             >

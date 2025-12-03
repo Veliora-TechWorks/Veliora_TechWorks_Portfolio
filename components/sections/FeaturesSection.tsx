@@ -55,7 +55,36 @@ export function FeaturesSection() {
           </p>
         </motion.div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        {/* Mobile: Enhanced Card View */}
+        <div className="block md:hidden space-y-6">
+          {features.map((feature, index) => (
+            <motion.div
+              key={feature.title}
+              initial={{ opacity: 0, y: 30 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: index * 0.1 }}
+              viewport={{ once: true }}
+              className="glass rounded-xl p-6 border border-accent/10 hover:border-accent/30 transition-all duration-300 shadow-lg"
+            >
+              <div className="flex items-start space-x-4">
+                <div className="w-14 h-14 bg-gradient-to-br from-neon/20 to-accent/20 rounded-xl flex items-center justify-center flex-shrink-0 shadow-inner">
+                  <feature.icon className="h-7 w-7 text-neon" />
+                </div>
+                <div className="flex-1">
+                  <h3 className="text-xl font-bold text-secondary mb-2">
+                    {feature.title}
+                  </h3>
+                  <p className="text-accent/90 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+              </div>
+            </motion.div>
+          ))}
+        </div>
+
+        {/* Tablet/Desktop: Grid View */}
+        <div className="hidden md:grid grid-cols-2 lg:grid-cols-3 gap-6">
           {features.map((feature, index) => (
             <motion.div
               key={feature.title}
@@ -63,7 +92,7 @@ export function FeaturesSection() {
               whileInView={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               viewport={{ once: true }}
-              className="glass rounded-xl p-6 hover:neon-glow transition-all duration-300 group"
+              className="glass rounded-lg p-6 hover:shadow-lg transition-all duration-300 group"
             >
               <div className="w-12 h-12 bg-metallic-gradient rounded-lg flex items-center justify-center mb-4 group-hover:scale-110 transition-transform">
                 <feature.icon className="h-6 w-6 text-primary" />

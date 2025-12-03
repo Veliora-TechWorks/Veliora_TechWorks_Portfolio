@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Eye, EyeOff, Lock, Mail, User } from 'lucide-react'
 import Link from 'next/link'
@@ -11,11 +11,30 @@ export default function Setup() {
   const [isLoading, setIsLoading] = useState(false)
   const [success, setSuccess] = useState(false)
   const [error, setError] = useState('')
+  const [checking, setChecking] = useState(true)
   const [formData, setFormData] = useState({
     email: '',
     password: '',
     confirmPassword: ''
   })
+
+  useEffect(() => {
+    checkAdminExists()
+  }, [])
+
+  const checkAdminExists = async () => {
+    try {
+      const response = await fetch('/api/setup')
+      const data = await response.json()
+      if (data.hasAdmin) {
+        window.location.href = '/login'
+        return
+      }
+    } catch (error) {
+      console.error('Error checking admin:', error)
+    }
+    setChecking(false)
+  }
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -56,6 +75,17 @@ export default function Setup() {
     }
     
     setIsLoading(false)
+  }
+
+  if (checking) {
+    return (
+      <div className="min-h-screen bg-primary flex items-center justify-center px-4">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-neon border-t-transparent rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-accent">Checking setup status...</p>
+        </div>
+      </div>
+    )
   }
 
   if (success) {

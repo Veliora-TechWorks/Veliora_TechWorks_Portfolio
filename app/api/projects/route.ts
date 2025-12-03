@@ -55,6 +55,9 @@ export async function POST(request: NextRequest) {
     const projectData = {
       id: Date.now().toString(),
       ...body,
+      image: body.imageUrl || body.image || '',
+      images: body.images || [],
+      coverImage: body.coverImage || '',
       createdAt: new Date().toISOString()
     }
     
@@ -65,6 +68,41 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     console.error('Create project error:', error)
     return NextResponse.json({ error: 'Failed to create project' }, { status: 400 })
+  }
+}
+
+export async function PUT(request: NextRequest) {
+  try {
+    const { searchParams } = new URL(request.url)
+    const id = searchParams.get('id')
+    
+    if (!id) {
+      return NextResponse.json({ error: 'Project ID required' }, { status: 400 })
+    }
+    
+    const body = await request.json()
+    const projects = readProjects()
+    
+    const index = projects.findIndex((project: any) => project.id === id)
+    if (index === -1) {
+      return NextResponse.json({ error: 'Project not found' }, { status: 404 })
+    }
+    
+    projects[index] = {
+      ...projects[index],
+      ...body,
+      image: body.imageUrl || body.image || projects[index].image,
+      images: body.images || projects[index].images || [],
+      coverImage: body.coverImage || projects[index].coverImage || '',
+      updatedAt: new Date().toISOString()
+    }
+    
+    writeProjects(projects)
+    
+    return NextResponse.json(projects[index])
+  } catch (error) {
+    console.error('Update project error:', error)
+    return NextResponse.json({ error: 'Failed to update project' }, { status: 500 })
   }
 }
 

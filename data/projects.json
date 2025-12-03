@@ -1,16 +1,26 @@
 [
   {
-    "id": "1764612080238",
-    "title": "BharatBuy",
-    "description": "ssss",
+    "id": "1764701515331",
+    "title": "Bharatbuy",
+    "description": "E-commerce",
     "category": "Web Development",
     "technologies": [
-      "nextjs",
-      "firebase"
+      "NEXTJS",
+      "CLOUDINARY",
+      "GITHUB"
     ],
     "liveUrl": "",
     "githubUrl": "",
     "featured": true,
-    "createdAt": "2025-12-01T18:01:20.238Z"
+    "imageUrl": "",
+    "images": [
+      "https://res.cloudinary.com/dpd4keszz/image/upload/v1764701485/veliora-projects/abmrxvin6sp7aywf337l.jpg",
+      "https://res.cloudinary.com/dpd4keszz/image/upload/v1764701468/veliora-projects/oxuiqf6lo2zf5tqlb308.jpg",
+      "https://res.cloudinary.com/dpd4keszz/image/upload/v1764701462/veliora-projects/hhxaaawvl5whuppvomiy.jpg"
+    ],
+    "coverImage": "https://res.cloudinary.com/dpd4keszz/image/upload/v1764701443/veliora-projects/j8csnkztxpdbynnn3gql.jpg",
+    "image": "",
+    "createdAt": "2025-12-02T18:51:55.331Z",
+    "updatedAt": "2025-12-02T18:55:10.288Z"
   }
 ]
