@@ -18,22 +18,28 @@ export function Navigation() {
     }
     
     const checkAdminStatus = () => {
-      const adminStatus = localStorage.getItem('isAdminLoggedIn')
-      setIsAdmin(adminStatus === 'true')
+      if (typeof window !== 'undefined') {
+        const adminStatus = localStorage.getItem('isAdminLoggedIn')
+        setIsAdmin(adminStatus === 'true')
+      }
     }
     
     // Check admin login status on mount
     checkAdminStatus()
     
     // Listen for storage changes and custom logout event
-    window.addEventListener('storage', checkAdminStatus)
-    window.addEventListener('adminLogout', checkAdminStatus)
-    window.addEventListener('scroll', handleScroll)
+    if (typeof window !== 'undefined') {
+      window.addEventListener('storage', checkAdminStatus)
+      window.addEventListener('adminLogout', checkAdminStatus)
+      window.addEventListener('scroll', handleScroll)
+    }
     
     return () => {
-      window.removeEventListener('storage', checkAdminStatus)
-      window.removeEventListener('adminLogout', checkAdminStatus)
-      window.removeEventListener('scroll', handleScroll)
+      if (typeof window !== 'undefined') {
+        window.removeEventListener('storage', checkAdminStatus)
+        window.removeEventListener('adminLogout', checkAdminStatus)
+        window.removeEventListener('scroll', handleScroll)
+      }
     }
   }, [])
 

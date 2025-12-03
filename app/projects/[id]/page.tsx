@@ -35,10 +35,16 @@ export default function ProjectDetails() {
 
   useEffect(() => {
     // Preload all images
-    allImages.forEach((src) => {
-      const img = new Image()
-      img.src = src.replace('/upload/', '/upload/w_800,h_450,c_fill/')
-    })
+    if (typeof window !== 'undefined') {
+      allImages.forEach((src) => {
+        try {
+          const img = new Image()
+          img.src = src.replace('/upload/', '/upload/w_800,h_450,c_fill/')
+        } catch (error) {
+          console.warn('Failed to preload image:', src)
+        }
+      })
+    }
   }, [allImages])
 
   const currentImage = allImages[currentImageIndex]
@@ -122,7 +128,7 @@ export default function ProjectDetails() {
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3 }}
                 >
-                  {currentImage && process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ? (
+                  {currentImage ? (
                     <CldImage 
                       src={currentImage} 
                       alt={project.title}
@@ -246,20 +252,24 @@ export default function ProjectDetails() {
                   </div>
 
                   <div className="flex gap-4">
-                    {project.liveUrl && (
+                    {project.liveUrl && project.liveUrl.trim() && (
                       <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                        <Button variant="neon" size="lg" className="bg-gradient-to-r from-neon to-neon/80">
-                          <ExternalLink className="h-5 w-5 mr-2" />
-                          View Live Project
-                        </Button>
+                        <Link href={project.liveUrl} target="_blank" rel="noopener noreferrer">
+                          <Button variant="neon" size="lg" className="bg-gradient-to-r from-neon to-neon/80">
+                            <ExternalLink className="h-5 w-5 mr-2" />
+                            View Live Project
+                          </Button>
+                        </Link>
                       </motion.div>
                     )}
-                    {project.githubUrl && (
+                    {project.githubUrl && project.githubUrl.trim() && (
                       <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                        <Button variant="outline" size="lg" className="border-accent/30 hover:border-neon/50">
-                          <Github className="h-5 w-5 mr-2" />
-                          View Source Code
-                        </Button>
+                        <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer">
+                          <Button variant="outline" size="lg" className="border-accent/30 hover:border-neon/50">
+                            <Github className="h-5 w-5 mr-2" />
+                            View Source Code
+                          </Button>
+                        </Link>
                       </motion.div>
                     )}
                   </div>
@@ -275,7 +285,7 @@ export default function ProjectDetails() {
                 whileHover={{ scale: 1.01 }}
                 transition={{ duration: 0.3 }}
               >
-                {currentImage && process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ? (
+                {currentImage ? (
                   <CldImage 
                     src={currentImage} 
                     alt={project.title}
@@ -398,20 +408,24 @@ export default function ProjectDetails() {
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
-                  {project.liveUrl && (
+                  {project.liveUrl && project.liveUrl.trim() && (
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
-                      <Button variant="neon" size="lg" className="w-full bg-gradient-to-r from-neon to-neon/80">
-                        <ExternalLink className="h-5 w-5 mr-2" />
-                        View Live Project
-                      </Button>
+                      <Link href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="block">
+                        <Button variant="neon" size="lg" className="w-full bg-gradient-to-r from-neon to-neon/80">
+                          <ExternalLink className="h-5 w-5 mr-2" />
+                          View Live Project
+                        </Button>
+                      </Link>
                     </motion.div>
                   )}
-                  {project.githubUrl && (
+                  {project.githubUrl && project.githubUrl.trim() && (
                     <motion.div whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }} className="flex-1">
-                      <Button variant="outline" size="lg" className="w-full border-accent/30 hover:border-neon/50">
-                        <Github className="h-5 w-5 mr-2" />
-                        View Source Code
-                      </Button>
+                      <Link href={project.githubUrl} target="_blank" rel="noopener noreferrer" className="block">
+                        <Button variant="outline" size="lg" className="w-full border-accent/30 hover:border-neon/50">
+                          <Github className="h-5 w-5 mr-2" />
+                          View Source Code
+                        </Button>
+                      </Link>
                     </motion.div>
                   )}
                 </div>
