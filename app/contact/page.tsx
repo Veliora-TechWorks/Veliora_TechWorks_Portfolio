@@ -13,13 +13,16 @@ export default function Contact() {
     message: '',
   })
   const [isSubmitting, setIsSubmitting] = useState(false)
+  const [submitStatus, setSubmitStatus] = useState<'idle' | 'success' | 'error'>('idle')
+  const [statusMessage, setStatusMessage] = useState('')
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setIsSubmitting(true)
+    setSubmitStatus('idle')
     
     try {
-      const response = await fetch('/api/contacts', {
+      const response = await fetch('/api/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,14 +30,19 @@ export default function Contact() {
         body: JSON.stringify(formData),
       })
       
+      const data = await response.json()
+      
       if (response.ok) {
-        alert('Message sent successfully!')
+        setSubmitStatus('success')
+        setStatusMessage(data.message || 'Message sent successfully!')
         setFormData({ name: '', email: '', subject: '', message: '' })
       } else {
-        alert('Failed to send message. Please try again.')
+        setSubmitStatus('error')
+        setStatusMessage(data.error || 'Failed to send message. Please try again.')
       }
     } catch (error) {
-      alert('An error occurred. Please try again.')
+      setSubmitStatus('error')
+      setStatusMessage('Network error. Please check your connection and try again.')
     } finally {
       setIsSubmitting(false)
     }
@@ -166,6 +174,12 @@ export default function Contact() {
                     </>
                   )}
                 </Button>
+                
+                {submitStatus !== 'idle' && (
+                  <div className={`p-4 rounded-lg text-center ${submitStatus === 'success' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+                    {statusMessage}
+                  </div>
+                )}
               </form>
             </motion.div>
 
@@ -409,6 +423,12 @@ export default function Contact() {
                     </>
                   )}
                 </Button>
+                
+                {submitStatus !== 'idle' && (
+                  <div className={`p-4 rounded-lg text-center ${submitStatus === 'success' ? 'bg-green-500/20 text-green-400 border border-green-500/30' : 'bg-red-500/20 text-red-400 border border-red-500/30'}`}>
+                    {statusMessage}
+                  </div>
+                )}
               </form>
             </motion.div>
           </div>

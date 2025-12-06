@@ -194,16 +194,11 @@ export default function AdminDashboard() {
         technologies: newProject.technologies.split(',').map(tech => tech.trim())
       }
       
-      console.log('Adding project:', projectData) // Debug log
-      
       const response = await fetch('/api/projects', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(projectData)
       })
-      
-      const result = await response.json()
-      console.log('Add project response:', result) // Debug log
       
       if (response.ok) {
         setNewProject({
@@ -219,24 +214,40 @@ export default function AdminDashboard() {
           coverImage: ''
         })
         setShowAddProject(false)
-        fetchProjects()
+        await fetchProjects()
+        setSaveMessage('✅ Project added successfully!')
+        setTimeout(() => setSaveMessage(''), 3000)
+      } else {
+        setSaveMessage('❌ Failed to add project. Please try again.')
+        setTimeout(() => setSaveMessage(''), 3000)
       }
     } catch (error) {
       console.error('Failed to add project:', error)
+      setSaveMessage('❌ Error adding project. Please try again.')
+      setTimeout(() => setSaveMessage(''), 3000)
     }
   }
 
   const handleDeleteProject = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this project?')) return
+    
     try {
       const response = await fetch(`/api/projects?id=${id}`, {
         method: 'DELETE'
       })
       
       if (response.ok) {
-        fetchProjects()
+        await fetchProjects()
+        setSaveMessage('✅ Project deleted successfully!')
+        setTimeout(() => setSaveMessage(''), 3000)
+      } else {
+        setSaveMessage('❌ Failed to delete project. Please try again.')
+        setTimeout(() => setSaveMessage(''), 3000)
       }
     } catch (error) {
       console.error('Failed to delete project:', error)
+      setSaveMessage('❌ Error deleting project. Please try again.')
+      setTimeout(() => setSaveMessage(''), 3000)
     }
   }
 
@@ -284,10 +295,17 @@ export default function AdminDashboard() {
           coverImage: ''
         })
         setEditingProject(null)
-        fetchProjects()
+        await fetchProjects()
+        setSaveMessage('✅ Project updated successfully!')
+        setTimeout(() => setSaveMessage(''), 3000)
+      } else {
+        setSaveMessage('❌ Failed to update project. Please try again.')
+        setTimeout(() => setSaveMessage(''), 3000)
       }
     } catch (error) {
       console.error('Failed to update project:', error)
+      setSaveMessage('❌ Error updating project. Please try again.')
+      setTimeout(() => setSaveMessage(''), 3000)
     }
   }
 
@@ -466,6 +484,30 @@ export default function AdminDashboard() {
 
   return (
     <div className="pt-16 min-h-screen bg-primary">
+      {/* Success/Error Message Banner */}
+      <AnimatePresence>
+        {saveMessage && (
+          <motion.div
+            initial={{ opacity: 0, y: -50 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -50 }}
+            className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
+          >
+            <div className={`glass rounded-lg p-4 border ${
+              saveMessage.includes('✅') 
+                ? 'border-green-500/50 bg-green-500/10' 
+                : 'border-red-500/50 bg-red-500/10'
+            }`}>
+              <p className={`text-center font-medium ${
+                saveMessage.includes('✅') ? 'text-green-400' : 'text-red-400'
+              }`}>
+                {saveMessage}
+              </p>
+            </div>
+          </motion.div>
+        )}
+      </AnimatePresence>
+      
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Professional Header */}
         <motion.div

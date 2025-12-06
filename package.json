@@ -6,7 +6,10 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "validate-deployment": "node scripts/validate-deployment.js",
+    "test:crud": "node scripts/test-crud.js",
+    "test:prod": "npm run build && npm start"
   },
   "dependencies": {
     "@prisma/client": "^5.7.1",
@@ -15,6 +18,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "@vercel/postgres": "^0.10.0",
     "autoprefixer": "^10.0.1",
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",

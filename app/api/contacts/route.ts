@@ -1,32 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
+import { Storage } from '@/lib/storage'
 
-const dataFile = path.join(process.cwd(), 'data', 'contacts.json')
+const storage = new Storage('contacts')
 
-const readData = () => {
-  try {
-    if (fs.existsSync(dataFile)) {
-      const data = fs.readFileSync(dataFile, 'utf8')
-      return JSON.parse(data)
-    }
-    return []
-  } catch (error) {
-    return []
-  }
-}
-
-const writeData = (data: any) => {
-  try {
-    const dataDir = path.dirname(dataFile)
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true })
-    }
-    fs.writeFileSync(dataFile, JSON.stringify(data, null, 2))
-  } catch (error) {
-    console.error('Error writing contacts data:', error)
-  }
-}
+const readData = () => storage.read()
+const writeData = (data: any) => storage.write(data)
 
 export async function GET() {
   try {

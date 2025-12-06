@@ -1,4 +1,35 @@
 import { NextRequest, NextResponse } from 'next/server'
+import fs from 'fs'
+import path from 'path'
+
+const contactsFile = path.join(process.cwd(), 'data', 'contacts.json')
+
+const readContacts = () => {
+  try {
+    if (fs.existsSync(contactsFile)) {
+      const data = fs.readFileSync(contactsFile, 'utf8')
+      return JSON.parse(data)
+    }
+    return []
+  } catch (error) {
+    console.error('Error reading contacts:', error)
+    return []
+  }
+}
+
+const writeContacts = (contacts: any[]) => {
+  try {
+    const dir = path.dirname(contactsFile)
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true })
+    }
+    fs.writeFileSync(contactsFile, JSON.stringify(contacts, null, 2))
+    return true
+  } catch (error) {
+    console.error('Error writing contacts:', error)
+    return false
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -22,27 +53,35 @@ export async function POST(request: NextRequest) {
       )
     }
 
-    // Here you would typically save to database
-    // For now, we'll just log the submission
-    console.log('Contact form submission:', {
-      name,
-      email,
-      subject,
-      message,
-      timestamp: new Date().toISOString(),
-    })
+    // Create contact entry
+    const contact = {
+      id: Date.now().toString(),
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      subject: subject.trim(),
+      message: message.trim(),
+      createdAt: new Date().toISOString(),
+      status: 'new'
+    }
 
-    // In a real application, you might also send an email notification
-    // using a service like SendGrid, Nodemailer, etc.
+    // Save to file
+    const contacts = readContacts()
+    contacts.unshift(contact)
+    
+    if (!writeContacts(contacts)) {
+      throw new Error('Failed to save contact')
+    }
+
+    console.log('Contact form submission saved:', contact)
 
     return NextResponse.json(
-      { message: 'Contact form submitted successfully' },
+      { message: 'Message sent successfully! We will get back to you soon.' },
       { status: 200 }
     )
   } catch (error) {
     console.error('Contact form error:', error)
     return NextResponse.json(
-      { error: 'Internal server error' },
+      { error: 'Failed to send message. Please try again.' },
       { status: 500 }
     )
   }

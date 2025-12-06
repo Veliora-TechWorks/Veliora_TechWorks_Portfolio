@@ -1,41 +1,10 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
+import { Storage } from '@/lib/storage'
 
-const dataFile = path.join(process.cwd(), 'data', 'projects.json')
+const storage = new Storage('projects')
 
-// Ensure data directory exists
-const ensureDataDir = () => {
-  const dataDir = path.dirname(dataFile)
-  if (!fs.existsSync(dataDir)) {
-    fs.mkdirSync(dataDir, { recursive: true })
-  }
-}
-
-// Read projects from file
-const readProjects = () => {
-  try {
-    ensureDataDir()
-    if (fs.existsSync(dataFile)) {
-      const data = fs.readFileSync(dataFile, 'utf8')
-      return JSON.parse(data)
-    }
-    return []
-  } catch (error) {
-    console.error('Error reading projects:', error)
-    return []
-  }
-}
-
-// Write projects to file
-const writeProjects = (projects: any[]) => {
-  try {
-    ensureDataDir()
-    fs.writeFileSync(dataFile, JSON.stringify(projects, null, 2))
-  } catch (error) {
-    console.error('Error writing projects:', error)
-  }
-}
+const readProjects = () => storage.read()
+const writeProjects = (projects: any[]) => storage.write(projects)
 
 export async function GET() {
   try {

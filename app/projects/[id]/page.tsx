@@ -139,6 +139,10 @@ export default function ProjectDetails() {
                       format="auto"
                       loading="eager"
                       className="w-full h-full object-cover"
+                      onError={(e) => {
+                        console.error('Image failed to load:', currentImage)
+                        e.currentTarget.style.display = 'none'
+                      }}
                     />
                   ) : (
                     <>
@@ -296,6 +300,10 @@ export default function ProjectDetails() {
                     format="auto"
                     loading="eager"
                     className="w-full h-full object-cover"
+                    onError={(e) => {
+                      console.error('Image failed to load:', currentImage)
+                      e.currentTarget.style.display = 'none'
+                    }}
                   />
                 ) : (
                   <>

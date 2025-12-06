@@ -1,37 +1,16 @@
 import { NextRequest, NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
+import { Storage } from '@/lib/storage'
 
-const dataFile = path.join(process.cwd(), 'data', 'services.json')
+const storage = new Storage('services')
 
-const readData = () => {
-  try {
-    if (fs.existsSync(dataFile)) {
-      const data = fs.readFileSync(dataFile, 'utf8')
-      return JSON.parse(data)
-    }
-    return []
-  } catch (error) {
-    return []
-  }
-}
+const readData = () => storage.read()
 
 const writeData = (data: any) => {
-  try {
-    const dataDir = path.dirname(dataFile)
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true })
-    }
-    
-    const servicesWithIds = data.map((service: any, index: number) => ({
-      ...service,
-      id: service.id || `service-${Date.now()}-${index}`
-    }))
-    
-    fs.writeFileSync(dataFile, JSON.stringify(servicesWithIds, null, 2))
-  } catch (error) {
-    console.error('Error writing services data:', error)
-  }
+  const servicesWithIds = data.map((service: any, index: number) => ({
+    ...service,
+    id: service.id || `service-${Date.now()}-${index}`
+  }))
+  storage.write(servicesWithIds)
 }
 
 export async function GET() {

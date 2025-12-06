@@ -131,7 +131,7 @@ export default function Projects() {
                     
                     {/* Image Section */}
                     <div className="relative h-48 bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden">
-                      {(project.imageUrl || project.image || project.coverImage) && process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ? (
+                      {(project.imageUrl || project.image || project.coverImage) ? (
                         <CldImage 
                           src={project.imageUrl || project.image || project.coverImage} 
                           alt={project.title}
@@ -230,7 +230,7 @@ export default function Projects() {
                   >
                     {/* Enhanced Image Section */}
                     <div className="relative h-48 bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden">
-                      {(project.imageUrl || project.image || project.coverImage) && process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME ? (
+                      {(project.imageUrl || project.image || project.coverImage) ? (
                         <CldImage 
                           src={project.imageUrl || project.image || project.coverImage} 
                           alt={project.title}
