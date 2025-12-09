@@ -3,12 +3,9 @@ import { Storage } from '@/lib/storage'
 
 const storage = new Storage('projects')
 
-const readProjects = () => storage.read()
-const writeProjects = (projects: any[]) => storage.write(projects)
-
 export async function GET() {
   try {
-    const projects = readProjects()
+    const projects = await storage.read()
     return NextResponse.json(projects)
   } catch (error) {
     console.error('Get projects error:', error)
@@ -19,7 +16,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const projects = readProjects()
+    const projects = await storage.read()
     
     const projectData = {
       id: Date.now().toString(),
@@ -30,8 +27,8 @@ export async function POST(request: NextRequest) {
       createdAt: new Date().toISOString()
     }
     
-    projects.unshift(projectData) // Add to beginning for newest first
-    writeProjects(projects)
+    projects.unshift(projectData)
+    await storage.write(projects)
     
     return NextResponse.json(projectData, { status: 201 })
   } catch (error) {
@@ -50,7 +47,7 @@ export async function PUT(request: NextRequest) {
     }
     
     const body = await request.json()
-    const projects = readProjects()
+    const projects = await storage.read()
     
     const index = projects.findIndex((project: any) => project.id === id)
     if (index === -1) {
@@ -66,7 +63,7 @@ export async function PUT(request: NextRequest) {
       updatedAt: new Date().toISOString()
     }
     
-    writeProjects(projects)
+    await storage.write(projects)
     
     return NextResponse.json(projects[index])
   } catch (error) {
@@ -84,9 +81,9 @@ export async function DELETE(request: NextRequest) {
       return NextResponse.json({ error: 'Project ID required' }, { status: 400 })
     }
     
-    const projects = readProjects()
+    const projects = await storage.read()
     const filteredProjects = projects.filter((project: any) => project.id !== id)
-    writeProjects(filteredProjects)
+    await storage.write(filteredProjects)
     
     return NextResponse.json({ success: true })
   } catch (error) {

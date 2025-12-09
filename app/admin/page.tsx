@@ -483,7 +483,9 @@ export default function AdminDashboard() {
   ]
 
   return (
-    <div className="pt-16 min-h-screen bg-primary">
+    <div className="min-h-screen bg-primary">
+      {/* Mobile-optimized header with proper spacing */}
+      <div className="pt-16 sm:pt-20">
       {/* Success/Error Message Banner */}
       <AnimatePresence>
         {saveMessage && (
@@ -491,7 +493,7 @@ export default function AdminDashboard() {
             initial={{ opacity: 0, y: -50 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -50 }}
-            className="fixed top-20 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-full mx-4"
+            className="fixed top-20 sm:top-24 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-[calc(100%-2rem)] sm:w-full mx-4"
           >
             <div className={`glass rounded-lg p-4 border ${
               saveMessage.includes('✅') 
@@ -508,34 +510,35 @@ export default function AdminDashboard() {
         )}
       </AnimatePresence>
       
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Professional Header */}
+      <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-20 sm:pb-8">
+        {/* Professional Header - Mobile Optimized */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="mb-8"
+          className="mb-4 sm:mb-8"
         >
-          <div className="flex justify-between items-center">
-            <div>
-              <h1 className="text-4xl md:text-5xl font-bold mb-2">
+          <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 sm:gap-0">
+            <div className="flex-1">
+              <h1 className="text-2xl sm:text-4xl md:text-5xl font-bold mb-1 sm:mb-2">
                 <span className="bg-gradient-to-r from-neon to-accent bg-clip-text text-transparent">Admin</span> Dashboard
               </h1>
-              <p className="text-accent text-lg">Manage your portfolio content and settings</p>
+              <p className="text-accent text-sm sm:text-lg">Manage your portfolio</p>
             </div>
             
             <Button 
               variant="ghost" 
+              size="sm"
               onClick={handleLogout}
-              className="flex items-center space-x-2 text-accent hover:text-neon transition-colors"
+              className="flex items-center space-x-2 text-accent hover:text-neon transition-colors self-end sm:self-auto"
             >
               <LogOut className="h-4 w-4" />
-              <span>Logout</span>
+              <span className="text-sm">Logout</span>
             </Button>
           </div>
         </motion.div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-8">
           {/* Professional Sidebar */}
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -543,20 +546,20 @@ export default function AdminDashboard() {
             transition={{ duration: 0.6, delay: 0.1 }}
             className="lg:col-span-1"
           >
-            <div className="glass rounded-xl p-6">
-              <nav className="space-y-2">
+            <div className="glass rounded-xl p-3 sm:p-6">
+              <nav className="flex lg:flex-col overflow-x-auto lg:overflow-x-visible space-x-2 lg:space-x-0 lg:space-y-2 pb-2 lg:pb-0 -mx-3 px-3 sm:mx-0 sm:px-0">
                 {tabs.map((tab) => (
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-colors ${
+                    className={`flex-shrink-0 lg:w-full flex items-center space-x-2 lg:space-x-3 px-3 lg:px-4 py-2 lg:py-3 rounded-lg transition-colors whitespace-nowrap ${
                       activeTab === tab.id
                         ? 'bg-gradient-to-r from-neon to-accent text-primary'
                         : 'text-accent hover:bg-accent/10 hover:text-secondary'
                     }`}
                   >
-                    <tab.icon className="h-5 w-5" />
-                    <span className="font-medium">{tab.label}</span>
+                    <tab.icon className="h-4 w-4 lg:h-5 lg:w-5" />
+                    <span className="font-medium text-sm lg:text-base">{tab.label}</span>
                   </button>
                 ))}
               </nav>
@@ -757,54 +760,54 @@ export default function AdminDashboard() {
                 transition={{ duration: 0.5 }}
                 className="space-y-6"
               >
-                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6">
-                  <h3 className="text-2xl font-semibold text-secondary">Projects</h3>
-                  <div className="flex flex-wrap gap-2">
-                    <Button variant="neon" onClick={() => setShowAddProject(true)}>
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Project
-                    </Button>
-                    {bulkSelected.length > 0 && (
-                      <Button variant="ghost" onClick={handleBulkDelete} className="text-red-400 hover:text-red-300">
-                        <Trash2 className="h-4 w-4 mr-2" />
-                        Delete Selected ({bulkSelected.length})
-                      </Button>
-                    )}
-                  </div>
+                <div className="flex items-center justify-between mb-4">
+                  <h3 className="text-xl sm:text-2xl font-semibold text-secondary">Projects</h3>
+                  <Button variant="neon" onClick={() => setShowAddProject(true)} size="sm">
+                    <Plus className="h-4 w-4 sm:mr-2" />
+                    <span className="hidden sm:inline">Add</span>
+                  </Button>
                 </div>
+                {bulkSelected.length > 0 && (
+                  <div className="mb-4">
+                    <Button variant="ghost" onClick={handleBulkDelete} size="sm" className="text-red-400 hover:text-red-300 w-full sm:w-auto">
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete Selected ({bulkSelected.length})
+                    </Button>
+                  </div>
+                )}
 
-                {/* Advanced Filters */}
-                <div className="glass rounded-xl p-4 mb-6">
-                  <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
+                {/* Filters */}
+                <div className="glass rounded-xl p-3 mb-4">
+                  <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
                     <input
                       type="text"
-                      placeholder="Search projects..."
+                      placeholder="Search..."
                       value={searchTerm}
                       onChange={(e) => setSearchTerm(e.target.value)}
-                      className="px-4 py-2 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                      className="col-span-2 sm:col-span-1 px-3 py-2 text-sm bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary touch-manipulation"
                     />
                     <select
                       value={filterCategory}
                       onChange={(e) => setFilterCategory(e.target.value)}
-                      className="px-4 py-2 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                      className="px-3 py-2 text-sm bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary touch-manipulation"
                     >
-                      <option value="all">All Categories</option>
-                      <option value="Web Development">Web Development</option>
-                      <option value="UI/UX Design">UI/UX Design</option>
-                      <option value="Business Analysis">Business Analysis</option>
-                      <option value="Digital Marketing">Digital Marketing</option>
+                      <option value="all">All</option>
+                      <option value="Web Development">Web</option>
+                      <option value="UI/UX Design">UI/UX</option>
+                      <option value="Business Analysis">Business</option>
+                      <option value="Digital Marketing">Marketing</option>
                     </select>
                     <select
                       value={sortBy}
                       onChange={(e) => setSortBy(e.target.value)}
-                      className="px-4 py-2 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                      className="px-3 py-2 text-sm bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary touch-manipulation"
                     >
-                      <option value="date">Sort by Date</option>
-                      <option value="title">Sort by Title</option>
-                      <option value="category">Sort by Category</option>
+                      <option value="date">Date</option>
+                      <option value="title">Title</option>
+                      <option value="category">Category</option>
                     </select>
-                    <div className="text-accent text-sm flex items-center">
-                      Showing {sortedProjects.length} of {projects.length} projects
+                    <div className="text-accent text-xs sm:text-sm flex items-center justify-center">
+                      {sortedProjects.length}/{projects.length}
                     </div>
                   </div>
                 </div>
@@ -962,13 +965,14 @@ export default function AdminDashboard() {
                         />
                         <label htmlFor="featured" className="text-secondary">Featured Project</label>
                       </div>
-                      <div className="flex space-x-4">
-                        <Button type="submit" variant="neon">
+                      <div className="flex flex-col sm:flex-row gap-3 sm:space-x-4">
+                        <Button type="submit" variant="neon" className="w-full sm:w-auto touch-manipulation">
                           {editingProject ? 'Update Project' : 'Add Project'}
                         </Button>
                         <Button 
                           type="button" 
                           variant="ghost" 
+                          className="w-full sm:w-auto touch-manipulation"
                           onClick={() => {
                             setShowAddProject(false)
                             setEditingProject(null)
@@ -993,7 +997,149 @@ export default function AdminDashboard() {
                   </div>
                 )}
 
-                <div className="glass rounded-xl overflow-hidden">
+                {/* Mobile: Advanced Card View */}
+                <div className="block md:hidden space-y-4">
+                  {sortedProjects.map((project) => (
+                    <motion.div 
+                      key={project.id} 
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="glass rounded-xl overflow-hidden border border-accent/20 hover:border-neon/50 transition-all"
+                    >
+                      {/* Image Header */}
+                      {project.imageUrl && process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME && (
+                        <div className="relative h-32 bg-gradient-to-br from-neon/20 to-purple/20">
+                          <CldImage 
+                            src={project.imageUrl} 
+                            alt={project.title}
+                            width={400}
+                            height={128}
+                            crop={{ type: 'fill' }}
+                            className="w-full h-full object-cover opacity-80"
+                          />
+                          <div className="absolute top-2 right-2">
+                            <input
+                              type="checkbox"
+                              checked={bulkSelected.includes(project.id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setBulkSelected([...bulkSelected, project.id])
+                                } else {
+                                  setBulkSelected(bulkSelected.filter(id => id !== project.id))
+                                }
+                              }}
+                              className="w-5 h-5 rounded"
+                            />
+                          </div>
+                          {project.featured && (
+                            <div className="absolute top-2 left-2 bg-gradient-to-r from-neon to-purple px-2 py-1 rounded-full text-xs font-bold text-primary">
+                              ⭐ Featured
+                            </div>
+                          )}
+                        </div>
+                      )}
+                      
+                      {/* Content */}
+                      <div className="p-4">
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex-1">
+                            <h4 className="text-lg font-bold text-secondary mb-1">{project.title}</h4>
+                            <p className="text-sm text-accent/80 line-clamp-2">{project.description}</p>
+                          </div>
+                          {!project.imageUrl && (
+                            <input
+                              type="checkbox"
+                              checked={bulkSelected.includes(project.id)}
+                              onChange={(e) => {
+                                if (e.target.checked) {
+                                  setBulkSelected([...bulkSelected, project.id])
+                                } else {
+                                  setBulkSelected(bulkSelected.filter(id => id !== project.id))
+                                }
+                              }}
+                              className="mt-1 w-5 h-5"
+                            />
+                          )}
+                        </div>
+                        
+                        {/* Meta Info */}
+                        <div className="flex items-center gap-2 mb-3 flex-wrap">
+                          <span className="px-2 py-1 rounded-full text-xs bg-neon/10 text-neon border border-neon/30">
+                            {project.category}
+                          </span>
+                          {!project.featured && (
+                            <span className="px-2 py-1 rounded-full text-xs bg-gray-500/20 text-gray-400">
+                              Standard
+                            </span>
+                          )}
+                          <span className="text-xs text-accent flex items-center">
+                            <Eye className="h-3 w-3 mr-1" />
+                            {Math.floor(Math.random() * 500) + 50}
+                          </span>
+                          <span className="text-xs text-accent flex items-center">
+                            <Clock className="h-3 w-3 mr-1" />
+                            {new Date(project.createdAt).toLocaleDateString()}
+                          </span>
+                        </div>
+                        
+                        {/* Technologies */}
+                        {project.technologies && project.technologies.length > 0 && (
+                          <div className="flex flex-wrap gap-1 mb-3">
+                            {project.technologies.slice(0, 3).map((tech: string) => (
+                              <span key={tech} className="text-xs bg-accent/5 text-accent px-2 py-1 rounded">
+                                {tech}
+                              </span>
+                            ))}
+                            {project.technologies.length > 3 && (
+                              <span className="text-xs text-accent px-2 py-1">
+                                +{project.technologies.length - 3}
+                              </span>
+                            )}
+                          </div>
+                        )}
+                        
+                        {/* Action Buttons */}
+                        <div className="grid grid-cols-3 gap-2">
+                          <Button 
+                            variant="neon" 
+                            size="sm"
+                            className="touch-manipulation"
+                            onClick={() => handleEditProject(project)}
+                          >
+                            <Edit className="h-4 w-4 mr-1" />
+                            Edit
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="touch-manipulation border border-accent/30"
+                            onClick={() => window.open(`/projects/${project.id}`, '_blank')}
+                          >
+                            <Eye className="h-4 w-4 mr-1" />
+                            View
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            className="touch-manipulation text-red-400 hover:text-red-300 border border-red-400/30"
+                            onClick={() => handleDeleteProject(project.id)}
+                          >
+                            <Trash2 className="h-4 w-4 mr-1" />
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
+                    </motion.div>
+                  ))}
+                  {sortedProjects.length === 0 && (
+                    <div className="p-8 text-center text-accent glass rounded-xl">
+                      {searchTerm || filterCategory !== 'all' ? 'No projects match your filters.' : 'No projects added yet. Click "Add Project" to get started.'}
+                    </div>
+                  )}
+                </div>
+
+                {/* Desktop: Table View */}
+                <div className="hidden md:block glass rounded-xl overflow-hidden">
                   <table className="w-full">
                     <thead className="bg-accent/5">
                       <tr>
@@ -1046,7 +1192,7 @@ export default function AdminDashboard() {
                           </td>
                           <td className="p-4 text-accent">{Math.floor(Math.random() * 500) + 50}</td>
                           <td className="p-4">
-                            <div className="flex space-x-2">
+                            <div className="flex gap-2">
                               <Button 
                                 variant="ghost" 
                                 size="sm"
@@ -1271,19 +1417,20 @@ export default function AdminDashboard() {
                 transition={{ duration: 0.5 }}
                 className="space-y-6"
               >
-                <div className="flex justify-between items-center">
-                  <h3 className="text-2xl font-semibold text-secondary">Services Management</h3>
-                  <div className="flex gap-2">
+                <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3 mb-4">
+                  <h3 className="text-xl sm:text-2xl font-semibold text-secondary">Services</h3>
+                  <div className="flex gap-2 w-full sm:w-auto">
                     <Button 
                       variant="ghost" 
+                      size="sm"
                       onClick={() => setServicesData([...servicesData, { title: '', description: '', features: [], icon: '', price: '', status: 'active' }])}
-                      className="text-accent hover:text-neon"
+                      className="text-accent hover:text-neon flex-1 sm:flex-none"
                     >
-                      <Plus className="h-4 w-4 mr-2" />
-                      Add Service
+                      <Plus className="h-4 w-4 sm:mr-2" />
+                      <span className="hidden sm:inline">Add</span>
                     </Button>
-                    <Button variant="neon" onClick={() => updateServicesData(servicesData)}>
-                      Save All Changes
+                    <Button variant="neon" size="sm" onClick={() => updateServicesData(servicesData)} className="flex-1 sm:flex-none">
+                      Save
                     </Button>
                   </div>
                 </div>
@@ -1792,6 +1939,7 @@ export default function AdminDashboard() {
             </AnimatePresence>
           </motion.div>
         </div>
+      </div>
       </div>
     </div>
   )

@@ -3,12 +3,9 @@ import { Storage } from '@/lib/storage'
 
 const storage = new Storage('contacts')
 
-const readData = () => storage.read()
-const writeData = (data: any) => storage.write(data)
-
 export async function GET() {
   try {
-    const data = readData()
+    const data = await storage.read()
     return NextResponse.json(data)
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch contacts' }, { status: 500 })
@@ -18,7 +15,7 @@ export async function GET() {
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
-    const contacts = readData()
+    const contacts = await storage.read()
     
     const newContact = {
       id: `contact-${Date.now()}`,
@@ -33,7 +30,7 @@ export async function POST(request: NextRequest) {
     }
     
     contacts.unshift(newContact)
-    writeData(contacts)
+    await storage.write(contacts)
     
     return NextResponse.json({ success: true, contact: newContact })
   } catch (error) {
@@ -44,13 +41,13 @@ export async function POST(request: NextRequest) {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    const contacts = readData()
+    const contacts = await storage.read()
     
     const updatedContacts = contacts.map((contact: any) => 
       contact.id === body.id ? { ...contact, ...body } : contact
     )
     
-    writeData(updatedContacts)
+    await storage.write(updatedContacts)
     return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update contact' }, { status: 500 })
@@ -62,10 +59,10 @@ export async function DELETE(request: NextRequest) {
     const { searchParams } = new URL(request.url)
     const id = searchParams.get('id')
     
-    const contacts = readData()
+    const contacts = await storage.read()
     const filteredContacts = contacts.filter((contact: any) => contact.id !== id)
     
-    writeData(filteredContacts)
+    await storage.write(filteredContacts)
     return NextResponse.json({ success: true })
   } catch (error) {
     return NextResponse.json({ error: 'Failed to delete contact' }, { status: 500 })

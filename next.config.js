@@ -2,18 +2,18 @@
 const nextConfig = {
   images: {
     domains: ['res.cloudinary.com'],
-    remotePatterns: [
-      {
-        protocol: 'https',
-        hostname: 'res.cloudinary.com',
-        port: '',
-        pathname: '/**',
-      },
-    ],
+    formats: ['image/avif', 'image/webp'],
+    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    imageSizes: [16, 32, 48, 64, 96, 128, 256, 384],
+    minimumCacheTTL: 60,
   },
-  env: {
-    NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME: process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME,
+  compiler: {
+    removeConsole: process.env.NODE_ENV === 'production',
   },
+  swcMinify: true,
+  reactStrictMode: true,
+  poweredByHeader: false,
+  compress: true,
 }
 
 module.exports = nextConfig

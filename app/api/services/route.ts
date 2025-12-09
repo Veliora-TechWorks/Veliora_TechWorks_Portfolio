@@ -3,19 +3,9 @@ import { Storage } from '@/lib/storage'
 
 const storage = new Storage('services')
 
-const readData = () => storage.read()
-
-const writeData = (data: any) => {
-  const servicesWithIds = data.map((service: any, index: number) => ({
-    ...service,
-    id: service.id || `service-${Date.now()}-${index}`
-  }))
-  storage.write(servicesWithIds)
-}
-
 export async function GET() {
   try {
-    const data = readData()
+    const data = await storage.read()
     return NextResponse.json(data)
   } catch (error) {
     return NextResponse.json({ error: 'Failed to fetch services data' }, { status: 500 })
@@ -25,8 +15,12 @@ export async function GET() {
 export async function PUT(request: NextRequest) {
   try {
     const body = await request.json()
-    writeData(body)
-    return NextResponse.json(body)
+    const servicesWithIds = body.map((service: any, index: number) => ({
+      ...service,
+      id: service.id || `service-${Date.now()}-${index}`
+    }))
+    await storage.write(servicesWithIds)
+    return NextResponse.json(servicesWithIds)
   } catch (error) {
     return NextResponse.json({ error: 'Failed to update services data' }, { status: 500 })
   }

@@ -1,71 +1,36 @@
-import fs from 'fs'
-import path from 'path'
-
-const isProduction = process.env.NODE_ENV === 'production'
-
-// In-memory storage for production
-const memoryStore: { [key: string]: any[] } = {}
+import { db } from './firebase'
+import { doc, getDoc, setDoc } from 'firebase/firestore'
 
 export class Storage {
-  private key: string
-  private filePath: string
+  private collectionName: string
 
-  constructor(key: string) {
-    this.key = key
-    this.filePath = path.join(process.cwd(), 'data', `${key}.json`)
+  constructor(collectionName: string) {
+    this.collectionName = collectionName
   }
 
-  read(): any[] {
+  async read(): Promise<any[]> {
     try {
-      if (isProduction) {
-        // Use memory cache in production
-        if (!memoryStore[this.key]) {
-          // Try to load initial data from file
-          if (fs.existsSync(this.filePath)) {
-            const data = fs.readFileSync(this.filePath, 'utf8')
-            memoryStore[this.key] = JSON.parse(data)
-          } else {
-            memoryStore[this.key] = []
-          }
-        }
-        return memoryStore[this.key]
-      }
-
-      // Development: read from file
-      this.ensureDataDir()
-      if (fs.existsSync(this.filePath)) {
-        const data = fs.readFileSync(this.filePath, 'utf8')
-        return JSON.parse(data)
+      const docRef = doc(db, 'storage', this.collectionName)
+      const docSnap = await getDoc(docRef)
+      
+      if (docSnap.exists()) {
+        return docSnap.data().items || []
       }
       return []
     } catch (error) {
-      console.error(`Error reading ${this.key}:`, error)
-      return memoryStore[this.key] || []
+      console.error(`Error reading ${this.collectionName}:`, error)
+      return []
     }
   }
 
-  write(data: any[]): void {
+  async write(data: any[]): Promise<void> {
     try {
-      if (isProduction) {
-        // Update memory cache in production
-        memoryStore[this.key] = data
-        console.log(`${this.key} updated in cache (production mode)`)
-        return
-      }
-
-      // Development: write to file
-      this.ensureDataDir()
-      fs.writeFileSync(this.filePath, JSON.stringify(data, null, 2))
+      const docRef = doc(db, 'storage', this.collectionName)
+      await setDoc(docRef, { items: data, updatedAt: new Date().toISOString() })
+      console.log(`${this.collectionName} saved to Firebase`)
     } catch (error) {
-      console.error(`Error writing ${this.key}:`, error)
-    }
-  }
-
-  private ensureDataDir(): void {
-    if (isProduction) return
-    const dataDir = path.dirname(this.filePath)
-    if (!fs.existsSync(dataDir)) {
-      fs.mkdirSync(dataDir, { recursive: true })
+      console.error(`Error writing ${this.collectionName}:`, error)
+      throw error
     }
   }
 }

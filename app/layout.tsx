@@ -4,7 +4,12 @@ import './globals.css'
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
 
-const inter = Inter({ subsets: ['latin'] })
+const inter = Inter({ 
+  subsets: ['latin'],
+  display: 'swap',
+  preload: true,
+  variable: '--font-inter'
+})
 
 export const metadata: Metadata = {
   title: 'Veliora TechWorks - Innovating Beyond Boundaries',
@@ -13,6 +18,13 @@ export const metadata: Metadata = {
   icons: {
     icon: '/Favicon.jpg',
   },
+}
+
+export const viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  maximumScale: 5,
+  themeColor: '#000000',
 }
 
 export default function RootLayout({
