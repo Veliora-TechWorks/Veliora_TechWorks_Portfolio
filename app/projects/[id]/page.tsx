@@ -2,7 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { useState, useEffect, useMemo } from 'react'
-import { ArrowLeft, ExternalLink, Github, Calendar, User, Tag, ChevronLeft, ChevronRight } from 'lucide-react'
+import { ArrowLeft, ExternalLink, Github, Calendar, User, Tag, ChevronLeft, ChevronRight, X } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { useParams, useRouter } from 'next/navigation'
@@ -14,6 +14,7 @@ export default function ProjectDetails() {
   const [project, setProject] = useState<any>(null)
   const [loading, setLoading] = useState(true)
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
+  const [isFullscreen, setIsFullscreen] = useState(false)
 
   useEffect(() => {
     fetchProject()
@@ -22,11 +23,19 @@ export default function ProjectDetails() {
   const allImages = useMemo(() => {
     if (!project) return []
     const images = []
+    // Include main image first, then additional images
     if (project.imageUrl) images.push(project.imageUrl)
     if (project.image) images.push(project.image)
-    if (project.coverImage) images.push(project.coverImage)
-    if (project.images) images.push(...project.images)
+    if (project.images && project.images.length > 0) {
+      images.push(...project.images)
+    }
     return Array.from(new Set(images.filter(Boolean)))
+  }, [project])
+
+  const coverImage = useMemo(() => {
+    if (!project) return null
+    // Use main project image as cover
+    return project.imageUrl || project.image || null
   }, [project])
 
   useEffect(() => {
@@ -47,7 +56,7 @@ export default function ProjectDetails() {
     }
   }, [allImages])
 
-  const currentImage = allImages[currentImageIndex]
+  const currentImage = allImages.length > 0 ? allImages[currentImageIndex] : coverImage
 
   const nextImage = () => {
     if (allImages.length > 0) {
@@ -63,11 +72,17 @@ export default function ProjectDetails() {
 
   const fetchProject = async () => {
     try {
+      console.log('Fetching project with ID:', params.id)
       const response = await fetch(`/api/projects/${params.id}`)
+      console.log('Response status:', response.status)
+      
       if (response.ok) {
         const data = await response.json()
+        console.log('Project data:', data)
         setProject(data)
       } else {
+        const error = await response.json()
+        console.error('Error response:', error)
         setProject(null)
       }
     } catch (error) {
@@ -102,6 +117,24 @@ export default function ProjectDetails() {
 
   return (
     <div className="pt-16 min-h-screen bg-dark-gradient">
+      {isFullscreen && (
+        <div className="fixed inset-0 z-50 bg-black flex items-center justify-center" onClick={() => setIsFullscreen(false)}>
+          <button className="absolute top-6 right-6 bg-gradient-to-r from-neon to-purple text-primary p-2 rounded-full shadow-lg hover:scale-110 transition-transform z-30" onClick={() => setIsFullscreen(false)}>
+            <X className="h-5 w-5" />
+          </button>
+          {allImages.length > 1 && (
+            <>
+              <button onClick={(e) => { e.stopPropagation(); prevImage(); }} className="absolute left-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-neon to-purple text-primary p-4 rounded-full shadow-lg hover:scale-110 transition-transform z-20">
+                <ChevronLeft className="h-8 w-8" />
+              </button>
+              <button onClick={(e) => { e.stopPropagation(); nextImage(); }} className="absolute right-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-neon to-purple text-primary p-4 rounded-full shadow-lg hover:scale-110 transition-transform z-20">
+                <ChevronRight className="h-8 w-8" />
+              </button>
+            </>
+          )}
+          <CldImage src={currentImage} alt={project.title} width={1920} height={1080} crop={{ type: 'fit' }} quality="auto" format="auto" className="w-full h-full object-contain" />
+        </div>
+      )}
       <section className="py-16 bg-primary relative overflow-hidden">
         {/* Subtle background decoration */}
         <div className="absolute inset-0 bg-gradient-to-br from-gray-100/2 via-transparent to-gray-300/2" />
@@ -124,7 +157,7 @@ export default function ProjectDetails() {
             <div className="hidden lg:flex flex-row gap-8">
               <div className="lg:w-1/2">
                 <motion.div 
-                  className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden relative shadow-xl border border-gray-200/10"
+                  className="w-full min-h-[320px] max-h-[600px] bg-gradient-to-br from-gray-900 to-black rounded-xl overflow-hidden relative shadow-2xl border border-gray-200/10 flex items-center justify-center"
                   whileHover={{ scale: 1.01 }}
                   transition={{ duration: 0.3 }}
                 >
@@ -132,13 +165,14 @@ export default function ProjectDetails() {
                     <CldImage 
                       src={currentImage} 
                       alt={project.title}
-                      width={800}
-                      height={450}
-                      crop={{ type: 'fill' }}
+                      width={1200}
+                      height={800}
+                      crop={{ type: 'fit' }}
                       quality="auto"
                       format="auto"
                       loading="eager"
-                      className="w-full h-full object-cover"
+                      className="w-full h-auto max-h-[700px] object-contain cursor-pointer"
+                      onClick={() => setIsFullscreen(true)}
                       onError={(e) => {
                         console.error('Image failed to load:', currentImage)
                         e.currentTarget.style.display = 'none'
@@ -157,48 +191,48 @@ export default function ProjectDetails() {
                     <>
                       <motion.button
                         onClick={prevImage}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-200 backdrop-blur-sm border border-gray-200/20"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="absolute left-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-neon to-purple text-primary p-3 rounded-full shadow-lg shadow-neon/50 border border-white/20 z-20"
                       >
-                        <ChevronLeft className="h-5 w-5" />
+                        <ChevronLeft className="h-6 w-6" />
                       </motion.button>
                       <motion.button
                         onClick={nextImage}
-                        whileHover={{ scale: 1.05 }}
-                        whileTap={{ scale: 0.95 }}
-                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-200 backdrop-blur-sm border border-gray-200/20"
+                        whileHover={{ scale: 1.1 }}
+                        whileTap={{ scale: 0.9 }}
+                        className="absolute right-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-neon to-purple text-primary p-3 rounded-full shadow-lg shadow-neon/50 border border-white/20 z-20"
                       >
-                        <ChevronRight className="h-5 w-5" />
+                        <ChevronRight className="h-6 w-6" />
                       </motion.button>
-                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm border border-gray-200/20">
+                      <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/90 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm font-bold border border-neon/30 shadow-lg z-20">
                         {currentImageIndex + 1} / {allImages.length}
                       </div>
                     </>
                   )}
                   
                   {project.featured && (
-                    <div className="absolute top-4 right-4 bg-gradient-to-r from-neon to-purple text-primary px-3 py-1 rounded-full text-sm font-bold">
+                    <div className="absolute top-4 right-4 bg-gradient-to-r from-neon to-purple text-primary px-3 py-1 rounded-full text-sm font-bold shadow-lg">
                       ★ Featured
                     </div>
                   )}
                 </motion.div>
                 
                 {allImages.length > 1 && (
-                  <div className="flex gap-2 mt-4 overflow-x-auto pb-2">
+                  <div className="flex gap-3 mt-6 overflow-x-auto pb-2 px-1">
                     {allImages.map((img, index) => (
                       <button
                         key={index}
                         onClick={() => setCurrentImageIndex(index)}
-                        className={`flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-colors ${
-                          index === currentImageIndex ? 'border-neon' : 'border-accent/30 hover:border-accent/60'
+                        className={`flex-shrink-0 w-20 h-16 rounded-lg overflow-hidden border-2 transition-all duration-300 shadow-lg ${
+                          index === currentImageIndex ? 'border-neon shadow-neon/50 ring-2 ring-neon/30' : 'border-gray-600/50 hover:border-neon/50'
                         }`}
                       >
                         <CldImage 
                           src={img} 
                           alt={`${project.title} ${index + 1}`}
-                          width={64}
-                          height={48}
+                          width={80}
+                          height={64}
                           crop={{ type: 'fill' }}
                           quality="auto"
                           format="auto"
@@ -285,7 +319,7 @@ export default function ProjectDetails() {
             <div className="lg:hidden">
               {/* Image Section */}
               <motion.div 
-                className="aspect-video bg-gradient-to-br from-gray-800 to-gray-900 rounded-xl overflow-hidden relative shadow-xl border border-gray-200/10 mb-8"
+                className="w-full min-h-[300px] max-h-[600px] bg-gradient-to-br from-gray-900 to-black rounded-xl overflow-hidden relative shadow-2xl border border-gray-200/10 mb-8 flex items-center justify-center"
                 whileHover={{ scale: 1.01 }}
                 transition={{ duration: 0.3 }}
               >
@@ -293,13 +327,14 @@ export default function ProjectDetails() {
                   <CldImage 
                     src={currentImage} 
                     alt={project.title}
-                    width={800}
-                    height={450}
-                    crop={{ type: 'fill' }}
+                    width={1200}
+                    height={800}
+                    crop={{ type: 'fit' }}
                     quality="auto"
                     format="auto"
                     loading="eager"
-                    className="w-full h-full object-cover"
+                    className="w-full h-auto max-h-[600px] object-contain cursor-pointer"
+                    onClick={() => setIsFullscreen(true)}
                     onError={(e) => {
                       console.error('Image failed to load:', currentImage)
                       e.currentTarget.style.display = 'none'
@@ -318,28 +353,28 @@ export default function ProjectDetails() {
                   <>
                     <motion.button
                       onClick={prevImage}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-200 backdrop-blur-sm border border-gray-200/20"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="absolute left-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-neon to-purple text-primary p-3 rounded-full shadow-lg shadow-neon/50 border border-white/20 z-20"
                     >
-                      <ChevronLeft className="h-5 w-5" />
+                      <ChevronLeft className="h-6 w-6" />
                     </motion.button>
                     <motion.button
                       onClick={nextImage}
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-black/60 hover:bg-black/80 text-white p-2 rounded-full transition-all duration-200 backdrop-blur-sm border border-gray-200/20"
+                      whileHover={{ scale: 1.1 }}
+                      whileTap={{ scale: 0.9 }}
+                      className="absolute right-4 top-1/2 -translate-y-1/2 bg-gradient-to-r from-neon to-purple text-primary p-3 rounded-full shadow-lg shadow-neon/50 border border-white/20 z-20"
                     >
-                      <ChevronRight className="h-5 w-5" />
+                      <ChevronRight className="h-6 w-6" />
                     </motion.button>
-                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/60 backdrop-blur-sm px-3 py-1 rounded-full text-white text-sm border border-gray-200/20">
+                    <div className="absolute bottom-4 left-1/2 -translate-x-1/2 bg-black/90 backdrop-blur-md px-4 py-2 rounded-full text-white text-sm font-bold border border-neon/30 shadow-lg z-20">
                       {currentImageIndex + 1} / {allImages.length}
                     </div>
                   </>
                 )}
                 
                 {project.featured && (
-                  <div className="absolute top-4 right-4 bg-gradient-to-r from-neon to-purple text-primary px-3 py-1 rounded-full text-sm font-bold">
+                  <div className="absolute top-4 right-4 bg-gradient-to-r from-neon to-purple text-primary px-3 py-1 rounded-full text-sm font-bold shadow-lg">
                     ★ Featured
                   </div>
                 )}
@@ -351,8 +386,8 @@ export default function ProjectDetails() {
                     <button
                       key={index}
                       onClick={() => setCurrentImageIndex(index)}
-                      className={`flex-shrink-0 w-16 h-12 rounded-lg overflow-hidden border-2 transition-colors ${
-                        index === currentImageIndex ? 'border-neon' : 'border-accent/30 hover:border-accent/60'
+                      className={`flex-shrink-0 w-20 h-16 rounded-xl overflow-hidden border-2 transition-all duration-300 shadow-lg ${
+                        index === currentImageIndex ? 'border-neon shadow-neon/50 ring-2 ring-neon/30' : 'border-gray-600/50 hover:border-neon/50'
                       }`}
                     >
                       <CldImage 

@@ -135,12 +135,12 @@ export default function Projects() {
                         <CldImage 
                           src={project.imageUrl || project.image || project.coverImage} 
                           alt={project.title}
-                          width={400}
+                          width={600}
                           height={192}
-                          crop={{ type: 'fill' }}
+                          crop={{ type: 'fit' }}
                           quality="auto"
                           format="auto"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
                         <>
@@ -234,12 +234,12 @@ export default function Projects() {
                         <CldImage 
                           src={project.imageUrl || project.image || project.coverImage} 
                           alt={project.title}
-                          width={400}
+                          width={600}
                           height={224}
-                          crop={{ type: 'fill' }}
+                          crop={{ type: 'fit' }}
                           quality="auto"
                           format="auto"
-                          className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
                         />
                       ) : (
                         <>

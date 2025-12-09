@@ -896,30 +896,6 @@ export default function AdminDashboard() {
 
                         <div>
                           <label className="block text-sm font-medium text-secondary mb-2">
-                            Cover Image (Optional)
-                          </label>
-                          <input
-                            type="file"
-                            accept="image/*"
-                            onChange={handleCoverImageUpload}
-                            className="w-full px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
-                          />
-                          {newProject.coverImage && process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME && (
-                            <div className="mt-2">
-                              <CldImage 
-                                src={newProject.coverImage} 
-                                alt="Cover Preview" 
-                                width={128}
-                                height={80}
-                                crop={{ type: 'fill' }}
-                                className="w-32 h-20 object-cover rounded" 
-                              />
-                            </div>
-                          )}
-                        </div>
-
-                        <div>
-                          <label className="block text-sm font-medium text-secondary mb-2">
                             Additional Images (Optional)
                           </label>
                           <input
@@ -1008,14 +984,14 @@ export default function AdminDashboard() {
                     >
                       {/* Image Header */}
                       {project.imageUrl && process.env.NEXT_PUBLIC_CLOUDINARY_CLOUD_NAME && (
-                        <div className="relative h-32 bg-gradient-to-br from-neon/20 to-purple/20">
+                        <div className="relative h-48 bg-gradient-to-br from-neon/20 to-purple/20">
                           <CldImage 
                             src={project.imageUrl} 
                             alt={project.title}
-                            width={400}
-                            height={128}
-                            crop={{ type: 'fill' }}
-                            className="w-full h-full object-cover opacity-80"
+                            width={600}
+                            height={192}
+                            crop={{ type: 'fit' }}
+                            className="w-full h-full object-contain"
                           />
                           <div className="absolute top-2 right-2">
                             <input
