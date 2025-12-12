@@ -43,18 +43,18 @@ export default function Projects() {
   return (
     <div className="pt-16">
       {/* Hero Section */}
-      <section className="py-20 bg-dark-gradient">
+      <section className="py-12 bg-dark-gradient">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            className="text-center mb-8"
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
               <span className="metallic-text">Our</span> Projects
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-accent max-w-3xl mx-auto px-4">
+            <p className="text-base sm:text-lg md:text-xl text-accent max-w-3xl mx-auto">
               Showcasing our latest work and innovative solutions across various industries
             </p>
           </motion.div>
@@ -110,239 +110,102 @@ export default function Projects() {
             </div>
           ) : (
             <>
-              {/* Mobile/Tablet: Vertical Card Layout */}
-              <div className="block lg:hidden grid grid-cols-1 md:grid-cols-2 gap-6 px-4">
+              {/* Modern Card Style */}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                 {filteredProjects.map((project, index) => (
                   <motion.div
                     key={project.id}
-                    initial={{ opacity: 0, y: 30 }}
+                    initial={{ opacity: 0, y: 20 }}
                     whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
                     viewport={{ once: true }}
-                    whileHover={{ y: -4, scale: 1.01 }}
-                    className="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden border border-gray-200/10 hover:border-gray-200/20 shadow-lg hover:shadow-xl transition-all duration-300 relative group"
+                    className="bg-primary border border-accent/20 rounded-xl shadow-lg hover:shadow-xl hover:border-accent/40 transition-all duration-300 overflow-hidden"
                   >
-                    {/* Subtle background effect */}
-                    <motion.div
-                      className="absolute inset-0 bg-gradient-to-br from-gray-100/5 to-gray-300/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300"
-                    />
-                    
-
-                    
                     {/* Image Section */}
-                    <div className="relative h-48 bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden">
+                    <div className="relative h-52 bg-accent/5 overflow-hidden">
                       {(project.imageUrl || project.image || project.coverImage) ? (
                         <CldImage 
                           src={project.imageUrl || project.image || project.coverImage} 
                           alt={project.title}
-                          width={600}
-                          height={192}
+                          width={400}
+                          height={208}
                           crop={{ type: 'fit' }}
                           quality="auto"
                           format="auto"
-                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
+                          className="w-full h-full object-cover"
                         />
                       ) : (
-                        <>
-                          <div className="absolute inset-0 bg-gradient-to-br from-gray-100/20 to-gray-300/20 opacity-30" />
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <span className="text-gray-400 text-lg font-semibold">Project Image</span>
-                          </div>
-                        </>
+                        <div className="absolute inset-0 flex items-center justify-center">
+                          <span className="text-accent/40 text-sm">No Preview Available</span>
+                        </div>
                       )}
                       
                       {project.featured && (
-                        <div className="absolute top-4 right-4 bg-gradient-to-r from-blue-500 to-purple-500 text-white px-3 py-1 rounded-full text-xs font-bold">
-                          ★ Featured
+                        <div className="absolute top-4 left-4 bg-neon text-primary px-3 py-1 rounded-full text-xs font-bold">
+                          Featured
                         </div>
                       )}
-                    </div>
-                    
-                    {/* Content Section */}
-                    <div className="p-6 relative z-10">
-                      <div className="flex items-center justify-between mb-3">
-                        <span className="text-xs text-blue-400 font-semibold bg-blue-400/10 px-3 py-1 rounded-full border border-blue-400/20">
+                      
+                      <div className="absolute top-4 right-4">
+                        <span className="bg-primary/80 text-neon text-xs px-2 py-1 rounded-full border border-neon/30">
                           {project.category}
                         </span>
                       </div>
-                        
-                      <h3 className="text-lg font-semibold mb-3 text-white group-hover:text-gray-200 transition-colors duration-200">
+                    </div>
+                    
+                    {/* Content Section */}
+                    <div className="p-6 space-y-4">
+                      <h3 className="text-xl font-bold text-secondary">
                         {project.title}
                       </h3>
                       
-                      <p className="text-gray-400 leading-relaxed mb-4 text-sm line-clamp-2">
-                        {project.description}
+                      <p className="text-accent/70 text-sm leading-relaxed">
+                        {project.description?.length > 80 ? `${project.description.substring(0, 80)}...` : project.description}
                       </p>
                       
-                      <div className="flex flex-wrap gap-2 mb-4">
+                      <div className="flex flex-wrap gap-1">
                         {project.technologies && project.technologies.slice(0, 3).map((tech: string) => (
                           <span 
                             key={tech} 
-                            className="text-xs bg-gray-700/50 text-gray-300 px-2 py-1 rounded-full border border-gray-600/30"
+                            className="text-xs bg-accent/5 text-accent/80 px-2 py-1 rounded-md border border-accent/10"
                           >
                             {tech}
                           </span>
                         ))}
                         {project.technologies && project.technologies.length > 3 && (
-                          <span className="text-xs text-gray-400">+{project.technologies.length - 3} more</span>
+                          <span className="text-xs text-accent/50 px-2 py-1">+{project.technologies.length - 3}</span>
                         )}
                       </div>
                       
-                      <div className="flex gap-2 mb-4">
-                        {project.liveUrl && (
-                          <Button variant="neon" size="sm" className="flex-1 text-xs">
-                            <ExternalLink className="h-3 w-3 mr-1" />
-                            Live
-                          </Button>
-                        )}
-                        {project.githubUrl && (
-                          <Button variant="outline" size="sm" className="flex-1 text-xs border-gray-600/30 hover:border-gray-500/50">
-                            <Github className="h-3 w-3 mr-1" />
-                            Code
-                          </Button>
-                        )}
-                      </div>
-                      
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="w-full bg-gray-800/50 hover:bg-gray-700/70 border border-gray-200/20 hover:border-gray-200/40 text-white text-xs"
-                        onClick={() => router.push(`/projects/${project.id}`)}
-                      >
-                        View Details
-                      </Button>
-                    </div>
-                  </motion.div>
-                ))}
-              </div>
-
-              {/* Desktop: Enhanced Grid Layout */}
-              <div className="hidden lg:grid grid-cols-3 gap-8">
-                {filteredProjects.map((project, index) => (
-                  <motion.div
-                    key={project.id}
-                    initial={{ opacity: 0, y: 50 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    whileHover={{ y: -6, scale: 1.01 }}
-                    className="bg-white/5 backdrop-blur-sm rounded-xl overflow-hidden hover:shadow-xl transition-all duration-300 group relative border border-gray-200/10 hover:border-gray-200/20"
-                  >
-                    {/* Enhanced Image Section */}
-                    <div className="relative h-48 bg-gradient-to-br from-gray-800 to-gray-900 overflow-hidden">
-                      {(project.imageUrl || project.image || project.coverImage) ? (
-                        <CldImage 
-                          src={project.imageUrl || project.image || project.coverImage} 
-                          alt={project.title}
-                          width={600}
-                          height={224}
-                          crop={{ type: 'fit' }}
-                          quality="auto"
-                          format="auto"
-                          className="w-full h-full object-contain group-hover:scale-105 transition-transform duration-300"
-                        />
-                      ) : (
-                        <>
-                          <motion.div 
-                            className="absolute inset-0 bg-gradient-to-br from-neon/20 to-purple/20 opacity-30"
-                            animate={{ 
-                              background: [
-                                "linear-gradient(to bottom right, rgba(0, 224, 255, 0.2), rgba(138, 138, 255, 0.2))",
-                                "linear-gradient(to bottom right, rgba(138, 138, 255, 0.2), rgba(0, 224, 255, 0.2))",
-                                "linear-gradient(to bottom right, rgba(0, 224, 255, 0.2), rgba(138, 138, 255, 0.2))"
-                              ]
-                            }}
-                            transition={{ duration: 4, repeat: Infinity }}
-                          />
-                          
-                          <div className="absolute inset-0 flex items-center justify-center">
-                            <motion.span 
-                              className="text-accent text-sm font-semibold"
-                              animate={{ opacity: [0.5, 1, 0.5] }}
-                              transition={{ duration: 2, repeat: Infinity }}
+                      <div className="pt-2 border-t border-accent/10">
+                        <div className="flex gap-2">
+                          {project.liveUrl && (
+                            <Button 
+                              variant="neon" 
+                              size="sm" 
+                              className="flex-1"
+                              onClick={() => window.open(project.liveUrl, '_blank')}
                             >
-                              Project Image
-                            </motion.span>
-                          </div>
-                        </>
-                      )}
-                      
-                      {project.featured && (
-                        <motion.div 
-                          className="absolute top-4 right-4 bg-gradient-to-r from-neon to-purple text-primary px-3 py-1 rounded-full text-xs font-bold shadow-lg"
-                          animate={{ scale: [1, 1.05, 1] }}
-                          transition={{ duration: 2, repeat: Infinity }}
-                        >
-                          ★ Featured
-                        </motion.div>
-                      )}
-                      
-
-                    </div>
-                    
-                    <div className="p-6">
-                      <div className="flex items-center justify-between mb-3">
-                        <motion.span 
-                          className="text-xs text-neon font-bold bg-gradient-to-r from-neon/20 to-purple/20 px-3 py-1 rounded-full border border-neon/30"
-                          whileHover={{ scale: 1.05 }}
-                        >
-                          {project.category}
-                        </motion.span>
-                      </div>
-                      
-                      <motion.h3 
-                        className="text-lg font-semibold mb-3 text-white group-hover:text-gray-200 transition-colors duration-200"
-                        whileHover={{ x: 2 }}
-                      >
-                        {project.title}
-                      </motion.h3>
-                      
-                      <p className="text-accent mb-4 text-sm leading-relaxed">
-                        {project.description}
-                      </p>
-                      
-                      <div className="flex flex-wrap gap-2 mb-4">
-                        {project.technologies && project.technologies.map((tech: string, techIndex: number) => (
-                          <motion.span 
-                            key={tech} 
-                            className="text-xs bg-accent/10 text-accent px-2 py-1 rounded-full border border-accent/20 hover:border-neon/30 hover:bg-neon/10 hover:text-neon transition-all duration-300"
-                            initial={{ opacity: 0, scale: 0 }}
-                            whileInView={{ opacity: 1, scale: 1 }}
-                            transition={{ delay: techIndex * 0.05 }}
-                            whileHover={{ scale: 1.05 }}
-                          >
-                            {tech}
-                          </motion.span>
-                        ))}
-                      </div>
-                      
-                      <div className="flex gap-3 mb-4">
-                        {project.liveUrl && (
-                          <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                            <Button variant="neon" size="sm" className="w-full text-xs bg-gradient-to-r from-neon to-neon/80 hover:from-neon/90 hover:to-neon/70">
                               <ExternalLink className="h-3 w-3 mr-1" />
-                              Live
+                              Demo
                             </Button>
-                          </motion.div>
-                        )}
-                        {project.githubUrl && (
-                          <motion.div className="flex-1" whileHover={{ scale: 1.02 }} whileTap={{ scale: 0.98 }}>
-                            <Button variant="outline" size="sm" className="w-full text-xs border-accent/30 hover:border-neon/50 hover:bg-neon/5">
+                          )}
+                          {project.githubUrl && (
+                            <Button variant="outline" size="sm" className="flex-1">
                               <Github className="h-3 w-3 mr-1" />
                               Code
                             </Button>
-                          </motion.div>
-                        )}
+                          )}
+                          <Button 
+                            variant="ghost" 
+                            size="sm" 
+                            className="flex-1 border border-accent/20 hover:bg-accent/5"
+                            onClick={() => router.push(`/projects/${project.id}`)}
+                          >
+                            Details
+                          </Button>
+                        </div>
                       </div>
-                      
-                      <Button 
-                        variant="ghost" 
-                        size="sm" 
-                        className="w-full text-xs bg-gray-800/50 hover:bg-gray-700/70 border border-gray-200/20 hover:border-gray-200/40 text-white"
-                        onClick={() => router.push(`/projects/${project.id}`)}
-                      >
-                        View Details
-                      </Button>
                     </div>
                   </motion.div>
                 ))}

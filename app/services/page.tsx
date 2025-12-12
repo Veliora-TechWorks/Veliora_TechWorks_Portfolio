@@ -53,18 +53,18 @@ export default function Services() {
   return (
     <div className="pt-16">
       {/* Hero Section */}
-      <section className="py-20 bg-dark-gradient">
+      <section className="py-12 bg-dark-gradient">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 50 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8 }}
-            className="text-center mb-16"
+            className="text-center mb-8"
           >
-            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-6">
+            <h1 className="text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-bold mb-4">
               <span className="metallic-text">Premium</span> Services
             </h1>
-            <p className="text-base sm:text-lg md:text-xl text-accent max-w-3xl mx-auto px-4">
+            <p className="text-base sm:text-lg md:text-xl text-accent max-w-3xl mx-auto">
               Comprehensive technology solutions designed to elevate your business to the next level
             </p>
           </motion.div>
@@ -109,7 +109,7 @@ export default function Services() {
                         </div>
                       </div>
                       <Link href="/contact">
-                        <Button className="w-full mt-2 bg-gradient-to-r from-neon to-purple hover:from-neon/80 hover:to-purple/80 text-primary font-semibold">
+                        <Button variant="outline" size="sm" className="w-full mt-2">
                           Get Started
                         </Button>
                       </Link>
@@ -121,34 +121,34 @@ export default function Services() {
             
             {/* Coming Soon Services */}
             {comingSoonServices.length > 0 && (
-              <div className="mt-12">
-                <h3 className="text-2xl font-bold text-secondary mb-6 text-center">Coming Soon</h3>
+              <div className="mt-8">
+                <h3 className="text-lg font-bold text-secondary mb-4 text-center">Coming Soon</h3>
                 {comingSoonServices.map((service, index) => {
                   const IconComponent = iconMap[service.icon] || Code
                   return (
                     <motion.div
                       key={service.id}
-                      initial={{ opacity: 0, y: 30 }}
+                      initial={{ opacity: 0, y: 20 }}
                       whileInView={{ opacity: 1, y: 0 }}
-                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                      transition={{ duration: 0.5, delay: index * 0.1 }}
                       viewport={{ once: true }}
-                      className="glass rounded-xl p-6 border border-accent/10 opacity-60 mb-4"
+                      className="bg-accent/5 border border-accent/10 rounded-lg p-4 opacity-60 mb-3"
                     >
-                      <div className="flex items-start space-x-4">
-                        <div className="w-14 h-14 bg-gradient-to-br from-gray-500/20 to-gray-600/20 rounded-xl flex items-center justify-center flex-shrink-0">
-                          <IconComponent className="h-7 w-7 text-gray-400" />
+                      <div className="flex gap-4">
+                        <div className="w-12 h-12 bg-accent/10 rounded-lg flex items-center justify-center flex-shrink-0">
+                          <IconComponent className="h-6 w-6 text-accent/60" />
                         </div>
                         <div className="flex-1">
                           <div className="flex items-center gap-2 mb-2">
-                            <h3 className="text-xl font-bold text-secondary">
+                            <h3 className="text-base font-semibold text-secondary">
                               {service.title}
                             </h3>
-                            <span className="text-sm bg-gray-500/20 text-gray-400 px-2 py-1 rounded-full">
-                              Coming Soon
+                            <span className="text-xs bg-accent/10 text-accent/60 px-2 py-1 rounded">
+                              Soon
                             </span>
                           </div>
-                          <p className="text-accent/70 leading-relaxed">
-                            {service.description}
+                          <p className="text-accent/60 text-sm">
+                            {service.description?.length > 60 ? `${service.description.substring(0, 60)}...` : service.description}
                           </p>
                         </div>
                       </div>
@@ -199,7 +199,7 @@ export default function Services() {
                     
                     <div className="mt-auto">
                       <Link href="/contact">
-                        <Button className="w-full text-sm bg-gradient-to-r from-neon to-purple hover:from-neon/80 hover:to-purple/80 text-primary font-semibold">
+                        <Button variant="outline" size="sm" className="w-full">
                           Get Started
                         </Button>
                       </Link>

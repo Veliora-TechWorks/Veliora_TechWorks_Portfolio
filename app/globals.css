@@ -22,6 +22,11 @@
     @apply bg-gradient-to-r from-neon to-accent bg-clip-text text-transparent;
   }
   
+  .metallic-text {
+    @apply bg-metallic-gradient bg-clip-text text-transparent;
+    filter: drop-shadow(0 0 8px rgba(192, 192, 192, 0.3));
+  }
+  
   .touch-manipulation {
     touch-action: manipulation;
     -webkit-tap-highlight-color: transparent;
