@@ -201,9 +201,16 @@ export default function ProjectDetails() {
                 <div className="max-w-4xl mx-auto space-y-8">
                   {/* Header */}
                   <div className="text-center border-b border-accent/10 pb-6">
-                    <span className="inline-block text-xs text-neon font-medium bg-neon/10 px-3 py-1 rounded border border-neon/20 mb-4">
-                      {project.category}
-                    </span>
+                    <div className="flex items-center justify-center gap-3 mb-4">
+                      {project.projectId && (
+                        <span className="text-xs text-neon font-mono bg-neon/10 px-3 py-1 rounded border border-neon/20">
+                          ID: {project.projectId}
+                        </span>
+                      )}
+                      <span className="text-xs text-accent font-medium bg-accent/10 px-3 py-1 rounded border border-accent/20">
+                        {project.category}
+                      </span>
+                    </div>
                     <h1 className="text-3xl lg:text-4xl font-bold text-secondary mb-4">
                       {project.title}
                     </h1>
@@ -248,7 +255,7 @@ export default function ProjectDetails() {
                       <Link href={project.liveUrl} target="_blank" rel="noopener noreferrer">
                         <Button variant="neon" size="lg" className="w-full sm:w-auto px-8">
                           <ExternalLink className="h-4 w-4 mr-2" />
-                          View Live Demo
+                          View Live Project
                         </Button>
                       </Link>
                     )}

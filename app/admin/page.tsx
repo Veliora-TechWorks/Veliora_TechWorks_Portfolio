@@ -18,6 +18,7 @@ export default function AdminDashboard() {
   const [showAddProject, setShowAddProject] = useState(false)
   const [editingProject, setEditingProject] = useState<any>(null)
   const [newProject, setNewProject] = useState({
+    projectId: '',
     title: '',
     description: '',
     category: 'Web Development',
@@ -202,6 +203,7 @@ export default function AdminDashboard() {
       
       if (response.ok) {
         setNewProject({
+          projectId: '',
           title: '',
           description: '',
           category: 'Web Development',
@@ -254,6 +256,7 @@ export default function AdminDashboard() {
   const handleEditProject = (project: any) => {
     setEditingProject(project)
     setNewProject({
+      projectId: project.projectId || '',
       title: project.title,
       description: project.description,
       category: project.category,
@@ -283,6 +286,7 @@ export default function AdminDashboard() {
       
       if (response.ok) {
         setNewProject({
+          projectId: '',
           title: '',
           description: '',
           category: 'Web Development',
@@ -818,7 +822,14 @@ export default function AdminDashboard() {
                       {editingProject ? 'Edit Project' : 'Add New Project'}
                     </h4>
                     <form onSubmit={editingProject ? handleUpdateProject : handleAddProject} className="space-y-4">
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input
+                          type="text"
+                          placeholder="Project ID (e.g., VT-001)"
+                          value={newProject.projectId}
+                          onChange={(e) => setNewProject({...newProject, projectId: e.target.value})}
+                          className="px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                        />
                         <input
                           type="text"
                           placeholder="Project Title"
@@ -953,6 +964,7 @@ export default function AdminDashboard() {
                             setShowAddProject(false)
                             setEditingProject(null)
                             setNewProject({
+                              projectId: '',
                               title: '',
                               description: '',
                               category: 'Web Development',
@@ -1019,6 +1031,11 @@ export default function AdminDashboard() {
                       <div className="p-4">
                         <div className="flex items-start justify-between mb-3">
                           <div className="flex-1">
+                            {project.projectId && (
+                              <div className="text-xs text-neon font-mono mb-1 bg-neon/10 px-2 py-1 rounded w-fit">
+                                ID: {project.projectId}
+                              </div>
+                            )}
                             <h4 className="text-lg font-bold text-secondary mb-1">{project.title}</h4>
                             <p className="text-sm text-accent/80 line-clamp-2">{project.description}</p>
                           </div>
@@ -1132,6 +1149,7 @@ export default function AdminDashboard() {
                             checked={bulkSelected.length === sortedProjects.length && sortedProjects.length > 0}
                           />
                         </th>
+                        <th className="text-left p-4 text-secondary">ID</th>
                         <th className="text-left p-4 text-secondary">Title</th>
                         <th className="text-left p-4 text-secondary">Category</th>
                         <th className="text-left p-4 text-secondary">Featured</th>
@@ -1154,6 +1172,11 @@ export default function AdminDashboard() {
                                 }
                               }}
                             />
+                          </td>
+                          <td className="p-4">
+                            <span className="text-neon font-mono text-sm bg-neon/10 px-2 py-1 rounded">
+                              {project.projectId || 'N/A'}
+                            </span>
                           </td>
                           <td className="p-4 text-accent">{project.title}</td>
                           <td className="p-4 text-accent">{project.category}</td>

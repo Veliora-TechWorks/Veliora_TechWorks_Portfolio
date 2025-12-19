@@ -146,24 +146,37 @@ export default function Projects() {
                         </div>
                       )}
                       
-                      <div className="absolute top-4 right-4">
-                        <span className="bg-primary/80 text-neon text-xs px-2 py-1 rounded-full border border-neon/30">
-                          {project.category}
-                        </span>
-                      </div>
+
                     </div>
                     
                     {/* Content Section */}
-                    <div className="p-6 space-y-4">
-                      <h3 className="text-xl font-bold text-secondary">
+                    <div className="p-6">
+                      {/* Header with badges */}
+                      <div className="flex items-center justify-between mb-3">
+                        <div className="flex gap-2">
+                          {project.projectId && (
+                            <span className="text-xs text-neon font-mono bg-neon/10 px-2 py-1 rounded border border-neon/30">
+                              {project.projectId}
+                            </span>
+                          )}
+                          <span className="text-xs text-accent bg-accent/10 px-2 py-1 rounded border border-accent/30">
+                            {project.category}
+                          </span>
+                        </div>
+                      </div>
+                      
+                      {/* Title */}
+                      <h3 className="text-xl font-bold text-secondary mb-3">
                         {project.title}
                       </h3>
                       
-                      <p className="text-accent/70 text-sm leading-relaxed">
+                      {/* Description */}
+                      <p className="text-accent/70 text-sm leading-relaxed mb-4">
                         {project.description?.length > 80 ? `${project.description.substring(0, 80)}...` : project.description}
                       </p>
                       
-                      <div className="flex flex-wrap gap-1">
+                      {/* Technologies */}
+                      <div className="flex flex-wrap gap-1 mb-4">
                         {project.technologies && project.technologies.slice(0, 3).map((tech: string) => (
                           <span 
                             key={tech} 
@@ -177,34 +190,25 @@ export default function Projects() {
                         )}
                       </div>
                       
-                      <div className="pt-2 border-t border-accent/10">
-                        <div className="flex gap-2">
-                          {project.liveUrl && (
-                            <Button 
-                              variant="neon" 
-                              size="sm" 
-                              className="flex-1"
-                              onClick={() => window.open(project.liveUrl, '_blank')}
-                            >
-                              <ExternalLink className="h-3 w-3 mr-1" />
-                              Demo
-                            </Button>
-                          )}
-                          {project.githubUrl && (
-                            <Button variant="outline" size="sm" className="flex-1">
-                              <Github className="h-3 w-3 mr-1" />
-                              Code
-                            </Button>
-                          )}
-                          <Button 
-                            variant="ghost" 
-                            size="sm" 
-                            className="flex-1 border border-accent/20 hover:bg-accent/5"
-                            onClick={() => router.push(`/projects/${project.id}`)}
-                          >
-                            Details
-                          </Button>
-                        </div>
+                      {/* Action Buttons */}
+                      <div className="grid grid-cols-2 gap-2 pt-2 border-t border-accent/10">
+                        <Button 
+                          variant={project.liveUrl ? "neon" : "ghost"}
+                          size="sm"
+                          disabled={!project.liveUrl}
+                          onClick={() => project.liveUrl && window.open(project.liveUrl, '_blank')}
+                        >
+                          <ExternalLink className="h-3 w-3 mr-1" />
+                          Live
+                        </Button>
+                        <Button 
+                          variant="ghost" 
+                          size="sm" 
+                          className="border border-accent/20 hover:bg-accent/5"
+                          onClick={() => router.push(`/projects/${project.id}`)}
+                        >
+                          Details
+                        </Button>
                       </div>
                     </div>
                   </motion.div>

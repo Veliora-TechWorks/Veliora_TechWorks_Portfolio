@@ -17,10 +17,10 @@ export function TechStackSection() {
     <section className="py-20 bg-primary relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          viewport={{ once: true, margin: '-50px' }}
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -36,10 +36,10 @@ export function TechStackSection() {
           {techStack.map((category, index) => (
             <motion.div
               key={category.name}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              viewport={{ once: true, margin: '-50px' }}
               className={`glass p-6 rounded-xl border shadow-lg hover:shadow-xl transition-all duration-300 ${
                 category.comingSoon ? 'border-accent/10 opacity-70' : 'border-accent/10 hover:border-neon/30'
               }`}
@@ -79,18 +79,18 @@ export function TechStackSection() {
           {techStack.map((category, index) => (
             <motion.div
               key={category.name}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.5, delay: index * 0.1 }}
-              viewport={{ once: true }}
-              whileHover={{ scale: 1.05, y: -10 }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              viewport={{ once: true, margin: '-50px' }}
+              whileHover={{ scale: 1.02, y: -5 }}
               className={`glass p-6 rounded-lg border group cursor-pointer ${
                 category.comingSoon ? 'border-accent/10 opacity-60' : 'border-accent/20'
               }`}
             >
               <motion.div
-                whileHover={{ rotate: 360 }}
-                transition={{ duration: 0.6 }}
+                whileHover={{ rotate: 180 }}
+                transition={{ duration: 0.3 }}
                 className="w-12 h-12 bg-metallic-gradient rounded-lg flex items-center justify-center mb-4 group-hover:shadow-lg"
               >
                 <category.icon className="w-6 h-6 text-primary" />
@@ -100,10 +100,10 @@ export function TechStackSection() {
                 {category.techs.map((tech, techIndex) => (
                   <motion.span
                     key={tech}
-                    initial={{ opacity: 0, scale: 0 }}
+                    initial={{ opacity: 0, scale: 0.8 }}
                     whileInView={{ opacity: 1, scale: 1 }}
-                    transition={{ delay: (index * 0.1) + (techIndex * 0.05) }}
-                    viewport={{ once: true }}
+                    transition={{ delay: (index * 0.05) + (techIndex * 0.02), duration: 0.2 }}
+                    viewport={{ once: true, margin: '-50px' }}
                     className={`px-3 py-1 text-sm rounded-full border ${
                       category.comingSoon 
                         ? 'bg-accent/5 text-accent/60 border-accent/10' 

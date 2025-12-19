@@ -8,7 +8,8 @@ const inter = Inter({
   subsets: ['latin'],
   display: 'swap',
   preload: true,
-  variable: '--font-inter'
+  variable: '--font-inter',
+  fallback: ['system-ui', 'arial']
 })
 
 export const metadata: Metadata = {
@@ -34,6 +35,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
+      <head>
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
+      </head>
       <body className={`${inter.className} bg-primary text-secondary min-h-screen`}>
         <Navigation />
         <main className="relative">

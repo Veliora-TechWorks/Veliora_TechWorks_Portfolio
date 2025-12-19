@@ -35,10 +35,10 @@ export function FloatingCards() {
     <section className="py-20 bg-primary relative overflow-hidden">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <motion.div
-          initial={{ opacity: 0, y: 50 }}
+          initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6 }}
-          viewport={{ once: true }}
+          transition={{ duration: 0.4 }}
+          viewport={{ once: true, margin: '-50px' }}
           className="text-center mb-16"
         >
           <h2 className="text-4xl md:text-5xl font-bold mb-6">
@@ -51,10 +51,10 @@ export function FloatingCards() {
           {cards.map((card, index) => (
             <motion.div
               key={card.title}
-              initial={{ opacity: 0, y: 30 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: index * 0.1 }}
-              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: index * 0.05 }}
+              viewport={{ once: true, margin: '-50px' }}
               className="glass p-6 rounded-xl border border-accent/10 hover:border-neon/30 shadow-lg hover:shadow-xl transition-all duration-300"
             >
               <div className="flex items-start space-x-4">
@@ -79,14 +79,14 @@ export function FloatingCards() {
           {cards.map((card, index) => (
             <motion.div
               key={card.title}
-              initial={{ opacity: 0, y: 50 }}
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.6, delay: card.delay }}
-              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: card.delay }}
+              viewport={{ once: true, margin: '-50px' }}
               whileHover={{ 
-                y: -10,
-                scale: 1.05,
-                transition: { duration: 0.3 }
+                y: -5,
+                scale: 1.02,
+                transition: { duration: 0.2 }
               }}
               className="relative group"
             >
