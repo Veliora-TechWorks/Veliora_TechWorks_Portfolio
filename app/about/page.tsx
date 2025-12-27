@@ -4,33 +4,40 @@ import { motion } from 'framer-motion'
 import { CheckCircle, Target, Lightbulb, Users } from 'lucide-react'
 import { InteractiveTimeline } from '@/components/sections/InteractiveTimeline'
 
-const skills = [
-  { name: 'Frontend Development', level: 95 },
-  { name: 'Backend Development', level: 90 },
-  { name: 'UI/UX Design', level: 85 },
-  { name: 'Business Analytics', level: 88 },
-  { name: 'Digital Marketing', level: 82 },
-]
-
-const timeline = [
-  { year: '2025', title: 'Company Founded', description: 'Started with a vision to innovate' },
-  { year: '2025', title: 'First Major Client', description: 'Delivered enterprise solution' },
-  /*{ year: '2021', title: 'Team Expansion', description: 'Grew to 10+ specialists' },
-  { year: '2022', title: 'Cloud Expertise', description: 'Became AWS certified partner' },
-  { year: '2023', title: 'AI Integration', description: 'Added AI/ML capabilities' },
-  { year: '2024', title: 'Global Reach', description: 'Serving clients worldwide' },*/
-]
-
-const getSkillTags = (skillName: string) => {
-  const tags: { [key: string]: string[] } = {
-    'Frontend Development': ['React', 'Next.js', 'TypeScript', 'Tailwind'],
-    'Backend Development': ['Node.js', 'Python', 'APIs', 'Databases'],
-    'UI/UX Design': ['Figma', 'Prototyping', 'User Research', 'Design Systems'],
-    'Business Analytics': ['Data Analysis', 'KPIs', 'Reporting', 'Strategy'],
-    'Digital Marketing': ['SEO', 'Social Media', 'Content', 'Analytics']
+const expertise = [
+  {
+    category: 'Web Development',
+    description: 'Full-stack web applications with modern frameworks and scalable architecture',
+    technologies: ['React', 'Next.js', 'Node.js', 'TypeScript', 'PostgreSQL'],
+    proficiency: 95,
+    projects: '15+ Projects',
+    icon: '🌐'
+  },
+  {
+    category: 'UI/UX Design',
+    description: 'User-centered design solutions that enhance engagement and conversion',
+    technologies: ['Figma', 'Adobe XD', 'Prototyping', 'User Research', 'Design Systems'],
+    proficiency: 88,
+    projects: '12+ Projects',
+    icon: '🎨'
+  },
+  {
+    category: 'Business Analysis',
+    description: 'Strategic insights and data-driven solutions for business optimization',
+    technologies: ['Analytics', 'KPI Tracking', 'Process Optimization', 'Reporting'],
+    proficiency: 90,
+    projects: '8+ Projects',
+    icon: '📊'
+  },
+  {
+    category: 'Digital Strategy',
+    description: 'Comprehensive digital transformation and growth strategies',
+    technologies: ['SEO', 'Content Strategy', 'Brand Development', 'Market Analysis'],
+    proficiency: 85,
+    projects: '10+ Projects',
+    icon: '🚀'
   }
-  return tags[skillName] || []
-}
+]
 
 export default function About() {
   return (
@@ -144,54 +151,131 @@ export default function About() {
         </div>
       </section>
 
-      {/* Skills Section */}
-      <section className="py-20 bg-dark-gradient">
+      {/* Professional Expertise Section */}
+      <section className="py-20 bg-primary">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
-            initial={{ opacity: 0, y: 50 }}
+            initial={{ opacity: 0, y: 30 }}
             whileInView={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8 }}
+            transition={{ duration: 0.6 }}
             viewport={{ once: true }}
             className="text-center mb-16"
           >
-            <h2 className="text-3xl sm:text-4xl font-bold mb-6 text-white">
-              Our Expertise
+            <h2 className="text-4xl font-bold mb-6">
+              <span className="metallic-text">Our</span> Expertise
             </h2>
-            <p className="text-gray-400 max-w-2xl mx-auto">
-              We combine technical excellence with creative innovation to deliver outstanding results
+            <p className="text-accent text-lg max-w-3xl mx-auto">
+              Delivering excellence across multiple domains with proven expertise and measurable results
             </p>
           </motion.div>
 
-          {/* Skills Section - Unified Layout */}
-          <div className="space-y-6">
-            {skills.map((skill, index) => (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            {expertise.map((item, index) => (
               <motion.div
-                key={skill.name}
+                key={item.category}
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="bg-white/5 backdrop-blur-sm rounded-xl p-6 border border-gray-200/10"
+                className="glass rounded-xl p-8 hover:border-neon/30 transition-all duration-300 lg:block hidden"
+              >
+                <div className="flex items-start justify-between mb-6">
+                  <div className="flex items-center space-x-4">
+                    <div className="text-3xl">{item.icon}</div>
+                    <div>
+                      <h3 className="text-xl font-bold text-secondary mb-1">{item.category}</h3>
+                      <p className="text-neon text-sm font-medium">{item.projects}</p>
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-2xl font-bold text-secondary">{item.proficiency}%</div>
+                    <div className="text-xs text-accent">Proficiency</div>
+                  </div>
+                </div>
+                
+                <p className="text-accent mb-6 leading-relaxed">{item.description}</p>
+                
+                <div className="mb-6">
+                  <div className="flex justify-between items-center mb-2">
+                    <span className="text-sm text-accent">Expertise Level</span>
+                    <span className="text-sm text-neon font-medium">{item.proficiency}%</span>
+                  </div>
+                  <div className="w-full bg-white/10 rounded-full h-2">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${item.proficiency}%` }}
+                      transition={{ duration: 1.5, delay: index * 0.2 }}
+                      viewport={{ once: true }}
+                      className="bg-gradient-to-r from-neon to-purple h-2 rounded-full"
+                    />
+                  </div>
+                </div>
+                
+                <div className="space-y-2">
+                  <h4 className="text-sm font-semibold text-secondary mb-3">Core Technologies</h4>
+                  <div className="flex flex-wrap gap-2">
+                    {item.technologies.map((tech) => (
+                      <span
+                        key={tech}
+                        className="px-3 py-1 text-xs bg-neon/10 text-neon border border-neon/20 rounded-full"
+                      >
+                        {tech}
+                      </span>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            ))}
+          </div>
+
+          {/* Mobile Layout */}
+          <div className="lg:hidden space-y-6">
+            {expertise.map((item, index) => (
+              <motion.div
+                key={item.category}
+                initial={{ opacity: 0, x: -30 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                transition={{ duration: 0.5, delay: index * 0.1 }}
+                viewport={{ once: true }}
+                className="glass rounded-2xl p-6 border-l-4 border-neon"
               >
                 <div className="flex items-center justify-between mb-4">
-                  <h3 className="text-lg font-semibold text-white">{skill.name}</h3>
-                  <span className="text-blue-400 font-bold">{skill.level}%</span>
+                  <div className="flex items-center space-x-3">
+                    <div className="text-2xl">{item.icon}</div>
+                    <h3 className="text-lg font-bold text-secondary">{item.category}</h3>
+                  </div>
+                  <div className="bg-neon/10 px-3 py-1 rounded-full">
+                    <span className="text-neon text-sm font-bold">{item.proficiency}%</span>
+                  </div>
                 </div>
-                <div className="w-full bg-gray-800 rounded-full h-3 mb-3">
-                  <motion.div
-                    initial={{ width: 0 }}
-                    whileInView={{ width: `${skill.level}%` }}
-                    transition={{ duration: 1.2, delay: index * 0.1 }}
-                    viewport={{ once: true }}
-                    className="bg-gradient-to-r from-blue-500 to-purple-600 h-3 rounded-full"
-                  />
+                
+                <p className="text-accent text-sm mb-4 leading-relaxed">{item.description}</p>
+                
+                <div className="flex justify-between items-center mb-3">
+                  <span className="text-xs text-accent">{item.projects}</span>
+                  <div className="w-24 bg-white/10 rounded-full h-1.5">
+                    <motion.div
+                      initial={{ width: 0 }}
+                      whileInView={{ width: `${item.proficiency}%` }}
+                      transition={{ duration: 1, delay: index * 0.15 }}
+                      viewport={{ once: true }}
+                      className="bg-neon h-1.5 rounded-full"
+                    />
+                  </div>
                 </div>
-                <div className="flex flex-wrap gap-2">
-                  {getSkillTags(skill.name).map((tag) => (
-                    <span key={tag} className="text-xs bg-gray-700/50 text-gray-300 px-2 py-1 rounded-full">
-                      {tag}
+                
+                <div className="flex flex-wrap gap-1.5">
+                  {item.technologies.slice(0, 3).map((tech) => (
+                    <span
+                      key={tech}
+                      className="px-2 py-1 text-xs bg-white/5 text-accent rounded-md border border-white/10"
+                    >
+                      {tech}
                     </span>
                   ))}
+                  {item.technologies.length > 3 && (
+                    <span className="px-2 py-1 text-xs text-neon">+{item.technologies.length - 3}</span>
+                  )}
                 </div>
               </motion.div>
             ))}

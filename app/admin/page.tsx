@@ -6,6 +6,8 @@ import { BarChart3, Users, Mail, Settings, Plus, Edit, Trash2, LogOut, Activity,
 import { Button } from '@/components/ui/button'
 import { useRouter } from 'next/navigation'
 import { CldImage } from 'next-cloudinary'
+import { ToastContainer } from '@/components/ui/toast'
+import { useToast } from '@/lib/use-toast'
 
 
 
@@ -14,6 +16,7 @@ import { CldImage } from 'next-cloudinary'
 export default function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview')
   const router = useRouter()
+  const { toasts, removeToast, success, error, warning, info } = useToast()
   const [projects, setProjects] = useState<any[]>([])
   const [showAddProject, setShowAddProject] = useState(false)
   const [editingProject, setEditingProject] = useState<any>(null)
@@ -33,7 +36,6 @@ export default function AdminDashboard() {
   const [uploading, setUploading] = useState(false)
   const [servicesData, setServicesData] = useState<any[]>([])
   const [editingService, setEditingService] = useState<any>(null)
-  const [saveMessage, setSaveMessage] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [filterCategory, setFilterCategory] = useState('all')
   const [sortBy, setSortBy] = useState('date')
@@ -43,13 +45,19 @@ export default function AdminDashboard() {
   const [selectedContact, setSelectedContact] = useState<any>(null)
   const [contactFilter, setContactFilter] = useState('all')
   const [contactSearch, setContactSearch] = useState('')
-  const [systemStats, setSystemStats] = useState({
-    dbConnected: true,
-    authActive: true,
-    lastBackup: '2 hours ago',
-    cacheSize: '45.2 MB',
-    cpuUsage: 23,
-    memoryUsage: 67
+  const [teamData, setTeamData] = useState<any[]>([])
+  const [founderData, setFounderData] = useState<any>({})
+  const [editingTeamMember, setEditingTeamMember] = useState<any>(null)
+  const [showAddTeamMember, setShowAddTeamMember] = useState(false)
+  const [editingFounder, setEditingFounder] = useState(false)
+  const [newTeamMember, setNewTeamMember] = useState({
+    name: '',
+    title: '',
+    bio: '',
+    expertise: '',
+    image: '',
+    experience: '',
+    projects: ''
   })
   const [analytics, setAnalytics] = useState({
     pageViews: 0,
@@ -65,7 +73,29 @@ export default function AdminDashboard() {
     fetchServicesData()
     fetchAnalytics()
     fetchContacts()
+    fetchTeamData()
+    fetchFounderData()
   }, [])
+
+  const fetchTeamData = async () => {
+    try {
+      const response = await fetch('/api/team')
+      const data = await response.json()
+      setTeamData(data)
+    } catch (error) {
+      console.error('Failed to fetch team data:', error)
+    }
+  }
+
+  const fetchFounderData = async () => {
+    try {
+      const response = await fetch('/api/founder')
+      const data = await response.json()
+      setFounderData(data)
+    } catch (error) {
+      console.error('Failed to fetch founder data:', error)
+    }
+  }
 
   const fetchContacts = async () => {
     try {
@@ -74,6 +104,162 @@ export default function AdminDashboard() {
       setContacts(data)
     } catch (error) {
       console.error('Failed to fetch contacts:', error)
+    }
+  }
+
+  const handleAddTeamMember = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      const memberData = {
+        ...newTeamMember,
+        expertise: newTeamMember.expertise.split(',').map(skill => skill.trim())
+      }
+      
+      const response = await fetch('/api/team', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(memberData)
+      })
+      
+      if (response.ok) {
+        setNewTeamMember({
+          name: '',
+          title: '',
+          bio: '',
+          expertise: '',
+          image: '',
+          experience: '',
+          projects: ''
+        })
+        setShowAddTeamMember(false)
+        await fetchTeamData()
+        success('Team Member Added', 'New team member has been successfully added to your team.')
+      }
+    } catch (error) {
+      console.error('Failed to add team member:', error)
+    }
+  }
+
+  const handleUpdateTeamMember = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      const memberData = {
+        ...newTeamMember,
+        expertise: newTeamMember.expertise.split(',').map(skill => skill.trim())
+      }
+      
+      const response = await fetch(`/api/team?id=${editingTeamMember.id}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(memberData)
+      })
+      
+      if (response.ok) {
+        setEditingTeamMember(null)
+        await fetchTeamData()
+        success('Team Member Updated', 'Team member information has been successfully updated.')
+      }
+    } catch (error) {
+      console.error('Failed to update team member:', error)
+    }
+  }
+
+  const handleDeleteTeamMember = async (id: string) => {
+    if (!confirm('Are you sure you want to delete this team member?')) return
+    
+    try {
+      const response = await fetch(`/api/team?id=${id}`, {
+        method: 'DELETE'
+      })
+      
+      if (response.ok) {
+        await fetchTeamData()
+        success('Team Member Deleted', 'Team member has been successfully removed from your team.')
+      } else {
+        error('Delete Failed', 'Failed to delete team member. Please try again.')
+      }
+    } catch (err) {
+      console.error('Failed to delete team member:', err)
+      error('Delete Error', 'An error occurred while deleting the team member.')
+    }
+  }
+
+  const handleUpdateFounder = async (e: React.FormEvent) => {
+    e.preventDefault()
+    try {
+      const response = await fetch('/api/founder', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(founderData)
+      })
+      
+      if (response.ok) {
+        setEditingFounder(false)
+        success('Founder Updated', 'Founder information has been successfully updated.')
+      } else {
+        error('Update Failed', 'Failed to update founder information. Please try again.')
+      }
+    } catch (err) {
+      console.error('Failed to update founder:', err)
+      error('Update Error', 'An error occurred while updating founder information.')
+    }
+  }
+
+  const handleTeamImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+
+      const data = await response.json()
+      if (response.ok) {
+        setNewTeamMember({...newTeamMember, image: data.url})
+        success('Image Uploaded', 'Team member image has been successfully uploaded.')
+      } else {
+        error('Upload Failed', 'Failed to upload team member image. Please try again.')
+      }
+    } catch (uploadErr) {
+      console.error('Upload failed:', uploadErr)
+      error('Upload Error', 'An error occurred while uploading the image.')
+    } finally {
+      setUploading(false)
+    }
+  }
+
+  const handleFounderImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setUploading(true)
+    try {
+      const formData = new FormData()
+      formData.append('file', file)
+
+      const response = await fetch('/api/upload', {
+        method: 'POST',
+        body: formData
+      })
+
+      const data = await response.json()
+      if (response.ok) {
+        setFounderData({...founderData, image: data.url})
+        success('Image Uploaded', 'Founder image has been successfully uploaded.')
+      } else {
+        error('Upload Failed', 'Failed to upload founder image. Please try again.')
+      }
+    } catch (uploadErr) {
+      console.error('Upload failed:', uploadErr)
+      error('Upload Error', 'An error occurred while uploading the founder image.')
+    } finally {
+      setUploading(false)
     }
   }
 
@@ -167,13 +353,13 @@ export default function AdminDashboard() {
       })
       if (response.ok) {
         setServicesData(data)
-        setSaveMessage('Services updated successfully!')
-        setTimeout(() => setSaveMessage(''), 3000)
+        success('Services Updated', 'Your services have been successfully updated and are now live.')
+      } else {
+        error('Update Failed', 'Failed to update services. Please try again.')
       }
-    } catch (error) {
-      console.error('Failed to update services data:', error)
-      setSaveMessage('Failed to save services. Please try again.')
-      setTimeout(() => setSaveMessage(''), 3000)
+    } catch (err) {
+      console.error('Failed to update services data:', err)
+      error('Update Error', 'Failed to save services. Please check your connection and try again.')
     }
   }
 
@@ -217,16 +403,13 @@ export default function AdminDashboard() {
         })
         setShowAddProject(false)
         await fetchProjects()
-        setSaveMessage('✅ Project added successfully!')
-        setTimeout(() => setSaveMessage(''), 3000)
+        success('Project Added', `"${projectData.title}" has been successfully added to your portfolio.`)
       } else {
-        setSaveMessage('❌ Failed to add project. Please try again.')
-        setTimeout(() => setSaveMessage(''), 3000)
+        error('Add Failed', 'Failed to add project. Please check your data and try again.')
       }
-    } catch (error) {
-      console.error('Failed to add project:', error)
-      setSaveMessage('❌ Error adding project. Please try again.')
-      setTimeout(() => setSaveMessage(''), 3000)
+    } catch (err) {
+      console.error('Failed to add project:', err)
+      error('Add Error', 'An error occurred while adding the project. Please try again.')
     }
   }
 
@@ -240,16 +423,13 @@ export default function AdminDashboard() {
       
       if (response.ok) {
         await fetchProjects()
-        setSaveMessage('✅ Project deleted successfully!')
-        setTimeout(() => setSaveMessage(''), 3000)
+        success('Project Deleted', 'Project has been successfully removed from your portfolio.')
       } else {
-        setSaveMessage('❌ Failed to delete project. Please try again.')
-        setTimeout(() => setSaveMessage(''), 3000)
+        error('Delete Failed', 'Failed to delete project. Please try again.')
       }
-    } catch (error) {
-      console.error('Failed to delete project:', error)
-      setSaveMessage('❌ Error deleting project. Please try again.')
-      setTimeout(() => setSaveMessage(''), 3000)
+    } catch (err) {
+      console.error('Failed to delete project:', err)
+      error('Delete Error', 'An error occurred while deleting the project. Please try again.')
     }
   }
 
@@ -300,16 +480,13 @@ export default function AdminDashboard() {
         })
         setEditingProject(null)
         await fetchProjects()
-        setSaveMessage('✅ Project updated successfully!')
-        setTimeout(() => setSaveMessage(''), 3000)
+        success('Project Updated', `"${projectData.title}" has been successfully updated.`)
       } else {
-        setSaveMessage('❌ Failed to update project. Please try again.')
-        setTimeout(() => setSaveMessage(''), 3000)
+        error('Update Failed', 'Failed to update project. Please check your data and try again.')
       }
-    } catch (error) {
-      console.error('Failed to update project:', error)
-      setSaveMessage('❌ Error updating project. Please try again.')
-      setTimeout(() => setSaveMessage(''), 3000)
+    } catch (err) {
+      console.error('Failed to update project:', err)
+      error('Update Error', 'An error occurred while updating the project. Please try again.')
     }
   }
 
@@ -330,9 +507,13 @@ export default function AdminDashboard() {
       const data = await response.json()
       if (response.ok) {
         setNewProject({...newProject, imageUrl: data.url})
+        success('Image Uploaded', 'Project image has been successfully uploaded.')
+      } else {
+        error('Upload Failed', 'Failed to upload image. Please try again.')
       }
-    } catch (error) {
-      console.error('Upload failed:', error)
+    } catch (uploadErr) {
+      console.error('Upload failed:', uploadErr)
+      error('Upload Error', 'An error occurred while uploading the image.')
     } finally {
       setUploading(false)
     }
@@ -359,8 +540,14 @@ export default function AdminDashboard() {
       const validUrls = uploadedUrls.filter(url => url !== null)
       
       setNewProject({...newProject, images: [...newProject.images, ...validUrls]})
-    } catch (error) {
-      console.error('Multiple upload failed:', error)
+      if (validUrls.length > 0) {
+        success('Images Uploaded', `${validUrls.length} image(s) have been successfully uploaded.`)
+      } else {
+        error('Upload Failed', 'Failed to upload images. Please try again.')
+      }
+    } catch (err) {
+      console.error('Multiple upload failed:', err)
+      error('Upload Error', 'An error occurred while uploading images.')
     } finally {
       setUploading(false)
     }
@@ -383,9 +570,13 @@ export default function AdminDashboard() {
       const data = await response.json()
       if (response.ok) {
         setNewProject({...newProject, coverImage: data.url})
+        success('Cover Image Uploaded', 'Cover image has been successfully uploaded.')
+      } else {
+        error('Upload Failed', 'Failed to upload cover image. Please try again.')
       }
-    } catch (error) {
-      console.error('Cover upload failed:', error)
+    } catch (err) {
+      console.error('Cover upload failed:', err)
+      error('Upload Error', 'An error occurred while uploading the cover image.')
     } finally {
       setUploading(false)
     }
@@ -417,10 +608,16 @@ export default function AdminDashboard() {
   })
 
   const handleBulkDelete = async () => {
-    for (const id of bulkSelected) {
-      await handleDeleteProject(id)
+    const count = bulkSelected.length
+    try {
+      for (const id of bulkSelected) {
+        await handleDeleteProject(id)
+      }
+      setBulkSelected([])
+      success('Bulk Delete Complete', `${count} project(s) have been successfully deleted.`)
+    } catch (err) {
+      error('Bulk Delete Failed', 'Some projects could not be deleted. Please try again.')
     }
-    setBulkSelected([])
   }
 
   const filteredContacts = contacts.filter(contact => {
@@ -459,8 +656,14 @@ export default function AdminDashboard() {
           }
         }
       }
-    } catch (error) {
-      console.error('Failed to update contact status:', error)
+      if (id === 'all') {
+        success('Status Updated', `All contacts marked as ${status.toLowerCase()}.`)
+      } else {
+        info('Status Updated', `Contact status changed to ${status.toLowerCase()}.`)
+      }
+    } catch (err) {
+      console.error('Failed to update contact status:', err)
+      error('Update Failed', 'Failed to update contact status. Please try again.')
     }
   }
 
@@ -473,8 +676,10 @@ export default function AdminDashboard() {
       if (selectedContact?.id === id) {
         setSelectedContact(null)
       }
-    } catch (error) {
-      console.error('Failed to delete contact:', error)
+      success('Contact Deleted', 'Contact message has been successfully deleted.')
+    } catch (err) {
+      console.error('Failed to delete contact:', err)
+      error('Delete Failed', 'Failed to delete contact. Please try again.')
     }
   }
 
@@ -482,6 +687,7 @@ export default function AdminDashboard() {
     { id: 'overview', label: 'Overview', icon: BarChart3, color: 'from-blue-500 to-cyan-500' },
     { id: 'projects', label: 'Projects', icon: Settings, color: 'from-purple-500 to-pink-500' },
     { id: 'services', label: 'Services', icon: Activity, color: 'from-teal-500 to-green-500' },
+    { id: 'team', label: 'Team', icon: Users, color: 'from-orange-500 to-red-500' },
     { id: 'contacts', label: 'Contacts', icon: Mail, color: 'from-green-500 to-emerald-500' },
     { id: 'settings', label: 'Settings', icon: Shield, color: 'from-gray-500 to-slate-500' },
   ]
@@ -490,29 +696,8 @@ export default function AdminDashboard() {
     <div className="min-h-screen bg-primary">
       {/* Mobile-optimized header with proper spacing */}
       <div className="pt-16 sm:pt-20">
-      {/* Success/Error Message Banner */}
-      <AnimatePresence>
-        {saveMessage && (
-          <motion.div
-            initial={{ opacity: 0, y: -50 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -50 }}
-            className="fixed top-20 sm:top-24 left-1/2 transform -translate-x-1/2 z-50 max-w-md w-[calc(100%-2rem)] sm:w-full mx-4"
-          >
-            <div className={`glass rounded-lg p-4 border ${
-              saveMessage.includes('✅') 
-                ? 'border-green-500/50 bg-green-500/10' 
-                : 'border-red-500/50 bg-red-500/10'
-            }`}>
-              <p className={`text-center font-medium ${
-                saveMessage.includes('✅') ? 'text-green-400' : 'text-red-400'
-              }`}>
-                {saveMessage}
-              </p>
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+      {/* Toast Notifications */}
+      <ToastContainer toasts={toasts} onRemove={removeToast} />
       
       <div className="max-w-7xl mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-8 pb-20 sm:pb-8">
         {/* Professional Header - Mobile Optimized */}
@@ -1228,6 +1413,270 @@ export default function AdminDashboard() {
               </motion.div>
             )}
 
+            {activeTab === 'team' && (
+              <motion.div
+                key="team"
+                initial={{ opacity: 0, y: 20 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -20 }}
+                transition={{ duration: 0.5 }}
+                className="space-y-6"
+              >
+                <div className="flex justify-between items-center">
+                  <h3 className="text-2xl font-semibold text-secondary">Team Management</h3>
+                  <Button variant="neon" onClick={() => setShowAddTeamMember(true)} size="sm">
+                    <Plus className="h-4 w-4 mr-2" />
+                    Add Member
+                  </Button>
+                </div>
+
+                {/* Founder Section */}
+                <div className="glass rounded-xl p-6">
+                  <div className="flex justify-between items-center mb-4">
+                    <h4 className="text-lg font-semibold text-secondary">Founder Information</h4>
+                    <Button 
+                      variant="ghost" 
+                      size="sm" 
+                      onClick={() => setEditingFounder(!editingFounder)}
+                      className="text-accent hover:text-neon"
+                    >
+                      <Edit className="h-4 w-4 mr-2" />
+                      {editingFounder ? 'Cancel' : 'Edit'}
+                    </Button>
+                  </div>
+                  
+                  {editingFounder ? (
+                    <form onSubmit={handleUpdateFounder} className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input
+                          type="text"
+                          placeholder="Name"
+                          value={founderData.name || ''}
+                          onChange={(e) => setFounderData({...founderData, name: e.target.value})}
+                          className="px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Title"
+                          value={founderData.title || ''}
+                          onChange={(e) => setFounderData({...founderData, title: e.target.value})}
+                          className="px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                        />
+                      </div>
+                      <textarea
+                        placeholder="Message"
+                        value={founderData.message || ''}
+                        onChange={(e) => setFounderData({...founderData, message: e.target.value})}
+                        className="w-full px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                        rows={3}
+                      />
+                      <textarea
+                        placeholder="Bio"
+                        value={founderData.bio || ''}
+                        onChange={(e) => setFounderData({...founderData, bio: e.target.value})}
+                        className="w-full px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                        rows={3}
+                      />
+                      <input
+                        type="text"
+                        placeholder="Expertise (comma separated)"
+                        value={founderData.expertise?.join(', ') || ''}
+                        onChange={(e) => setFounderData({...founderData, expertise: e.target.value.split(',').map((s: string) => s.trim())})}
+                        className="w-full px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                      />
+                      <div>
+                        <label className="block text-sm font-medium text-secondary mb-2">Founder Image</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleFounderImageUpload}
+                          className="w-full px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                        />
+                        {uploading && <p className="text-neon text-sm mt-2">Uploading...</p>}
+                        {founderData.image && (
+                          <div className="mt-2">
+                            <img src={founderData.image} alt="Preview" className="w-20 h-20 object-cover rounded" />
+                          </div>
+                        )}
+                      </div>
+                      <Button type="submit" variant="neon">
+                        Update Founder
+                      </Button>
+                    </form>
+                  ) : (
+                    <div className="text-accent">
+                      <p><strong>Name:</strong> {founderData.name}</p>
+                      <p><strong>Title:</strong> {founderData.title}</p>
+                      <p><strong>Message:</strong> {founderData.message}</p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Add/Edit Team Member Form */}
+                {(showAddTeamMember || editingTeamMember) && (
+                  <div className="glass rounded-xl p-6">
+                    <h4 className="text-lg font-semibold mb-4 text-secondary">
+                      {editingTeamMember ? 'Edit Team Member' : 'Add New Team Member'}
+                    </h4>
+                    <form onSubmit={editingTeamMember ? handleUpdateTeamMember : handleAddTeamMember} className="space-y-4">
+                      <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <input
+                          type="text"
+                          placeholder="Name"
+                          value={newTeamMember.name}
+                          onChange={(e) => setNewTeamMember({...newTeamMember, name: e.target.value})}
+                          className="px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                          required
+                        />
+                        <input
+                          type="text"
+                          placeholder="Title"
+                          value={newTeamMember.title}
+                          onChange={(e) => setNewTeamMember({...newTeamMember, title: e.target.value})}
+                          className="px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                          required
+                        />
+                      </div>
+                      <textarea
+                        placeholder="Bio"
+                        value={newTeamMember.bio}
+                        onChange={(e) => setNewTeamMember({...newTeamMember, bio: e.target.value})}
+                        className="w-full px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                        rows={3}
+                        required
+                      />
+                      <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <input
+                          type="text"
+                          placeholder="Expertise (comma separated)"
+                          value={newTeamMember.expertise}
+                          onChange={(e) => setNewTeamMember({...newTeamMember, expertise: e.target.value})}
+                          className="px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Experience (e.g., 5+ Years)"
+                          value={newTeamMember.experience}
+                          onChange={(e) => setNewTeamMember({...newTeamMember, experience: e.target.value})}
+                          className="px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                        />
+                        <input
+                          type="text"
+                          placeholder="Projects (e.g., 30+ Projects)"
+                          value={newTeamMember.projects}
+                          onChange={(e) => setNewTeamMember({...newTeamMember, projects: e.target.value})}
+                          className="px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                        />
+                      </div>
+                      <input
+                        type="url"
+                        placeholder="Image URL"
+                        value={newTeamMember.image}
+                        onChange={(e) => setNewTeamMember({...newTeamMember, image: e.target.value})}
+                        className="w-full px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                      />
+                      <div>
+                        <label className="block text-sm font-medium text-secondary mb-2">Upload Image</label>
+                        <input
+                          type="file"
+                          accept="image/*"
+                          onChange={handleTeamImageUpload}
+                          className="w-full px-4 py-3 bg-primary border border-accent/20 rounded-lg focus:border-neon focus:outline-none text-secondary"
+                        />
+                        {uploading && <p className="text-neon text-sm mt-2">Uploading...</p>}
+                        {newTeamMember.image && (
+                          <div className="mt-2">
+                            <img src={newTeamMember.image} alt="Preview" className="w-20 h-20 object-cover rounded" />
+                          </div>
+                        )}
+                      </div>
+                      <div className="flex space-x-4">
+                        <Button type="submit" variant="neon">
+                          {editingTeamMember ? 'Update Member' : 'Add Member'}
+                        </Button>
+                        <Button 
+                          type="button" 
+                          variant="ghost" 
+                          onClick={() => {
+                            setShowAddTeamMember(false)
+                            setEditingTeamMember(null)
+                            setNewTeamMember({
+                              name: '',
+                              title: '',
+                              bio: '',
+                              expertise: '',
+                              image: '',
+                              experience: '',
+                              projects: ''
+                            })
+                          }}
+                        >
+                          Cancel
+                        </Button>
+                      </div>
+                    </form>
+                  </div>
+                )}
+
+                {/* Team Members List */}
+                <div className="glass rounded-xl overflow-hidden">
+                  <div className="p-4 border-b border-accent/10">
+                    <h4 className="text-lg font-semibold text-secondary">Team Members ({teamData.length})</h4>
+                  </div>
+                  <div className="divide-y divide-accent/10">
+                    {teamData.map((member) => (
+                      <div key={member.id} className="p-4 flex items-center justify-between">
+                        <div className="flex items-center space-x-4">
+                          <div className="w-12 h-12 rounded-full bg-gradient-to-br from-neon/20 to-purple/20 overflow-hidden">
+                            {member.image ? (
+                              <img src={member.image} alt={member.name} className="w-full h-full object-cover" />
+                            ) : (
+                              <div className="w-full h-full bg-white/10 flex items-center justify-center text-lg">
+                                👤
+                              </div>
+                            )}
+                          </div>
+                          <div>
+                            <h5 className="font-semibold text-secondary">{member.name}</h5>
+                            <p className="text-sm text-accent">{member.title}</p>
+                            <p className="text-xs text-accent">{member.experience} • {member.projects}</p>
+                          </div>
+                        </div>
+                        <div className="flex space-x-2">
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => {
+                              setEditingTeamMember(member)
+                              setNewTeamMember({
+                                name: member.name,
+                                title: member.title,
+                                bio: member.bio,
+                                expertise: member.expertise?.join(', ') || '',
+                                image: member.image || '',
+                                experience: member.experience || '',
+                                projects: member.projects || ''
+                              })
+                            }}
+                          >
+                            <Edit className="h-4 w-4" />
+                          </Button>
+                          <Button 
+                            variant="ghost" 
+                            size="sm"
+                            onClick={() => handleDeleteTeamMember(member.id)}
+                            className="text-red-400 hover:text-red-300"
+                          >
+                            <Trash2 className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </motion.div>
+            )}
+
             {activeTab === 'contacts' && (
               <motion.div
                 key="contacts"
@@ -1433,12 +1882,6 @@ export default function AdminDashboard() {
                     </Button>
                   </div>
                 </div>
-
-                {saveMessage && (
-                  <div className="glass rounded-lg p-3 bg-green-500/10 border border-green-500/20">
-                    <p className="text-green-400 text-sm">{saveMessage}</p>
-                  </div>
-                )}
 
                 <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
                   {servicesData.map((service, index) => (

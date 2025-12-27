@@ -11,7 +11,7 @@ const config: Config = {
       colors: {
         primary: '#000000',
         secondary: '#FFFFFF',
-        accent: '#C0C0C0',
+        accent: '#FFFFFF',
         neon: '#00E0FF',
         purple: '#8A8AFF',
       },

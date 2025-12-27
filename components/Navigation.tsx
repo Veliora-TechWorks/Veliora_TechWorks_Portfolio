@@ -61,6 +61,7 @@ export function Navigation() {
     { href: '/about', label: 'About' },
     { href: '/services', label: 'Services' },
     { href: '/projects', label: 'Projects' },
+    { href: '/team', label: 'Team' },
     { href: '/contact', label: 'Contact' },
   ]
 

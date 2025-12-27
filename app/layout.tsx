@@ -1,16 +1,7 @@
 import type { Metadata } from 'next'
-import { Inter } from 'next/font/google'
 import './globals.css'
 import { Navigation } from '@/components/Navigation'
 import { Footer } from '@/components/Footer'
-
-const inter = Inter({ 
-  subsets: ['latin'],
-  display: 'swap',
-  preload: true,
-  variable: '--font-inter',
-  fallback: ['system-ui', 'arial']
-})
 
 export const metadata: Metadata = {
   title: 'Veliora TechWorks - Innovating Beyond Boundaries',
@@ -35,12 +26,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <head>
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link rel="dns-prefetch" href="https://res.cloudinary.com" />
-      </head>
-      <body className={`${inter.className} bg-primary text-secondary min-h-screen`}>
+      <body className="bg-primary text-secondary min-h-screen font-sans">
         <Navigation />
         <main className="relative">
           {children}
